@@ -1,20 +1,23 @@
 # Chrome Web Store 商店填写材料
 
-准备版本：1.3.0。核对日期：2026-10-13。以下各字段正文可直接复制到商店草稿。1.3.0 预览版安装包及公开页面已完成发布核验；当前商店草稿包为 1.2.0，仍需上传最终 1.3.0 ZIP，先不提交审核。
+准备版本：1.3.0。核对日期：2026-10-13。1.3.0 预览版安装包及公开页面已完成发布核验；主线程上传原 1.3.0 ZIP 后，在同一商店草稿的 Package 页面明确核对到版本 1.3.0、`nativeMessaging` 与主机权限范围。商品详细说明为 1376 字，主线程已确认最终保存进度结束。以下各字段及测试短版与草稿材料保持一致，先不提交审核。
 
-Mac 1.3.0 已构建安装，严格签名检查、本机协议读取共享设置及允许来源配置已通过。真实 Chrome 扩展 1.3.0 重载与自动连接、菜单栏功能截图仍待用户操作和核验。以下功能说明和审核步骤描述产品行为，不表示本次 Chrome 连接或商店审核已经完成。
+Mac 1.3.0 已构建安装，严格签名检查、本机协议读取共享设置及允许来源配置已通过。主线程已在真实 Chrome 工具栏打开开发版扩展 `epmhbckoikdfejlaelgbihlbmhplopld` 的 1.3.0 弹窗，核对“已连接 · 网页链接接管已开启”及与 Mac 一致的共享设置。用户已确认说明、首页和支持网址在前台显示正常。菜单栏、开发版扩展弹窗和安装说明三张截图已上传保存，并核对留存与排序。正式商店 ID 实际加载、1.3.0 网页点击实测和联系邮箱属于提审前事项，尚未提交审核。
+
+Privacy 表单已于 2026-10-13 填写并保存：单一用途、`nativeMessaging` 理由、主机访问范围理由、隐私政策网址、不使用远程代码、数据类别“网络记录”和“网站内容”，以及三项 Limited Use 披露；主线程看到“已成功保存内容。”。商品分类、语言、图标、宣传图和三张截图已保存，Test instructions 已保存 444 字短版。Distribution 已只读核对为免费、公开、所有地区，保留原设置。
 
 ## 产品信息
 
 - 名称：Chrome Tab Router · 链接复用
 - 简述：在网页链接创建新标签页之前，将链接交给 Mac 应用，查找并复用已有标签页。
-- 分类：工作效率。
-- 默认语言：中文（简体）。发布地区按后台选择。
+- 分类：工具。
+- 语言：中文（中国）。发布地区按后台选择。
 - 支持网址：[GitHub Issues](https://github.com/wuruoye/chrome-tab-router/issues)
 - Mac 应用下载地址：[1.3.0 · Apple 芯片](https://github.com/wuruoye/chrome-tab-router/releases/download/v1.3.0/chrome-tab-router-mac-1.3.0-arm64.zip)
 - 安装说明与验证页面：[Chrome Tab Router](https://wuruoye.github.io/chrome-tab-router/)
 - 隐私政策 URL：[隐私政策](https://wuruoye.github.io/chrome-tab-router/privacy.html)
 - 商店项目：[Chrome Tab Router](https://chromewebstore.google.com/detail/chrome-tab-router/iineonbhdnmadlkkmdcofakekmjpnkmn)。当前仍为草稿，上架后该链接可用于安装。
+- Distribution 当前设置：免费、公开、所有地区。尚未提交审核或发布。
 
 ## 详细说明
 
@@ -22,7 +25,7 @@ Chrome Tab Router 与同名 Mac 应用配合，在用户点击将打开新标签
 
 所有设置均从 Mac 应用菜单栏访问，扩展与 Mac 应用共用自动保存的设置。菜单栏显示默认浏览器状态、自动连接配置和最近连接记录，提供设为默认浏览器、恢复原默认浏览器、安装扩展、修复自动连接、打开扩展目录、安装与连接说明、隐私政策和 Chrome 自动化权限设置入口。“例外网站”子菜单支持添加、查看和删除域名；添加时弹出输入框。例外域名及其子域名的链接每次新开。
 
-安装并打开 Mac 应用后，再安装 Chrome 扩展。Mac 应用每次启动时会登记正式扩展的本机连接，扩展在安装、Chrome 启动和打开弹窗时自动检测连接；点击扩展图标可确认“已连接”。先安装扩展、再安装 App 时，首次打开 App 后点击“重新检测”即可重试。需要修复连接或使用本地开发版时，在扩展弹窗点击“修复连接”，并在 Chrome 提示时允许打开本机应用；新开发版的连接请求还需在 App 中确认。网页中指向新标签页的链接、Command 点击和鼠标中键点击可由扩展交给 Mac 应用处理。Mac 应用需要获准控制 Chrome，才能查找和切换标签页。若 Mac 应用暂时不可用，扩展会尝试直接打开目标链接。
+安装并打开 Mac 应用后，再安装 Chrome 扩展。Mac 应用每次启动时会登记正式扩展的本机连接，扩展在安装、Chrome 启动和打开弹窗时自动检测连接；点击扩展图标可确认“已连接”。先安装扩展、再安装 App 时，首次打开 App 后点击“重新检测”即可重试。若弹窗仍显示未连接，可点击“修复连接”，并在 Chrome 提示时允许打开本机应用；新开发版的连接请求还需在 App 中确认。已连接时可用“重新检测”或“打开 Mac 菜单”。网页中指向新标签页的链接、Command 点击和鼠标中键点击可由扩展交给 Mac 应用处理。Mac 应用需要获准控制 Chrome，才能查找和切换标签页。若 Mac 应用暂时不可用，扩展会尝试直接打开目标链接。
 
 为匹配标签页，扩展会读取用户点击的链接 URL，并通过 Chrome Native Messaging 交给本机 Mac 应用；Mac 应用在本机读取 Chrome 已打开标签页的 URL 作比较。即使启用忽略查询参数或锚点的匹配设置，传给本机应用的仍是完整 URL，更新标签页时也使用该完整 URL。URL 可能包含路径、查询参数或片段。本功能在支持的网页和框架中运行，具体数据处理见隐私政策。
 
@@ -47,13 +50,25 @@ https://wuruoye.github.io/chrome-tab-router/privacy.html
 
 **数据处理说明：** 扩展读取用户主动点击的目标链接 URL，并通过本机 Native Messaging 交给 Mac 应用。Mac 应用只在用户设备上读取 Chrome 已打开标签页的 URL，用于匹配、切换、更新和刷新标签页。完整 URL 可能包含域名、路径、查询参数和片段。设置、例外域名、扩展 ID、最近通信的来源扩展 ID 与时间、原默认浏览器标识保存在 Mac 本地；操作日志仅记录时间和动作名称，不记录 URL。浏览 URL、设置、连接记录和日志不会上传给开发者，不用于广告，不出售给第三方。
 
-**数据类别选择：** 选择“浏览活动”（Web history / browsing activity，按后台实际字段名称）。不选择“完全不处理用户数据”。本功能不读取网页正文、表单、密码输入框或 Cookie；完整 URL 本身可能包含用户放在路径、查询参数或片段中的信息。后台如按定义把链接 URL 同时归入“网站内容”或其他数据类别，应相应申报 URL，并与本隐私政策一致。
+**数据类别选择：** 实际勾选“网络记录”和“网站内容”；表单对“网站内容”的举例包含超链接。申报对象为用户点击的目标链接 URL 和 Mac 应用用于比较的现有标签页 URL，仅在用户设备上处理。本功能不读取网页正文、表单、密码输入框或 Cookie；完整 URL 本身可能包含用户放在路径、查询参数或片段中的信息。
 
 **Limited Use 声明：** Chrome Tab Router 只为向用户提供链接复用功能处理浏览 URL。数据仅在用户设备上处理，不出售、不用于广告，也不用于与该功能无关的用途；遵守 Chrome Web Store User Data Policy，包括 Limited Use 要求。
 
 **远程代码：** 选择“否”。所有 JavaScript 均随扩展包分发，没有加载或执行远程代码。
 
-## Test instructions 正文
+## Test instructions 短版
+
+后台上限为 500 字。以下 444 字正文已由主线程实际保存，并看到“已保存测试说明”；复制时保留五行换行。
+
+```text
+无需账号或付费。需要 Apple 芯片 Mac、macOS 13+ 和 Google Chrome。
+App 下载：https://github.com/wuruoye/chrome-tab-router/releases/download/v1.3.0/chrome-tab-router-mac-1.3.0-arm64.zip
+解压到 ~/Applications 并首次打开。预览包为临时签名，未 Apple 公证；如系统阻止，按“隐私与安全性”提示确认打开。首次路由时允许 App 控制 Chrome。
+安装本次审核扩展，弹窗确认“已连接”。完整安装和测试步骤：https://wuruoye.github.io/chrome-tab-router/
+菜单开启复用、网页接管、新链接更新、刷新，并忽略所有查询参数与锚点。验证页依次点击三个链接：第一个新开；第二个复用原页并更新参数，标签页数不增加；第三个新开。Command/中键点击也复用。关闭接管或将该域名加入例外后正常新开。
+```
+
+## Test instructions 详细版
 
 本扩展需要本机 Chrome Tab Router Mac 应用。无需账号、密码或付费。请使用 Apple 芯片 Mac、macOS 13 或更新版本，以及 Google Chrome。
 
@@ -75,10 +90,15 @@ https://wuruoye.github.io/chrome-tab-router/privacy.html
 
 | 文件 | 尺寸 | 用途与状态 |
 |---|---|---|
-| `assets/installation-page-1280x800.jpg` | 1280×800 | 真实线上安装说明网页的补充截图，尺寸已确认。可用于说明安装流程；菜单栏、扩展弹窗及功能成功画面另行采集。 |
-| `assets/chrome-web-store-small-promo.png` | 440×280 | 已准备的小宣传图，说明标签页复用功能；同名 SVG 为可编辑原稿。 |
+| `ChromeExtension/icons/icon128.png` | 128×128 | 商店图标，已上传并保存。 |
+| `assets/mac-menu-1280x800.jpg` | 1280×800 | 真实 Mac 主菜单排版截图，已视觉核对、上传保存并确认留存；商品截图第 1 张。 |
+| `assets/extension-popup-1280x800.jpg` | 1280×800 | 真实开发版扩展连接弹窗排版截图，已视觉核对、上传保存并确认留存；商品截图第 2 张。 |
+| `assets/installation-page-1280x800.jpg` | 1280×800 | 真实线上安装说明网页的补充截图，已上传保存并确认留存；商品截图第 3 张，用于说明安装流程。 |
+| `assets/chrome-web-store-small-promo.png` | 440×280 | 小宣传图，已上传并保存，说明标签页复用功能；同名 SVG 为可编辑原稿。 |
+| `assets/mac-menu-1.3.0.jpg` | 548×854 | 真实 Mac 主菜单原图，用于生成排版截图。 |
+| `assets/extension-popup-1.3.0.jpg` | 728×640 | 真实开发版扩展连接弹窗原图，用于生成排版截图。 |
 
-菜单栏设置、扩展“已连接”弹窗和实际复用成功画面的截图仍待完成。图片与文案尚未确认填入商店后台；1.3.0 草稿包更新和提交审核均未完成。素材说明见 [assets/README.md](assets/README.md)。
+两份界面截图从真实原图生成，排版页为 [mac-menu.html](screenshots/mac-menu.html) 和 [extension-popup.html](screenshots/extension-popup.html)，最终 JPEG 已核对为 1280×800。Package、Privacy、商品材料和测试短版已完成草稿填写与保存，Distribution 原有设置已核对。正式商店 ID 的实际加载与自动连接、1.3.0 网页点击实测、联系邮箱提供与验证属于提审前事项。公钥见 [chrome-extension-public-key.pem](chrome-extension-public-key.pem)，正式 ID 测试见 [official-id-testing.md](official-id-testing.md)，素材说明见 [assets/README.md](assets/README.md)。
 
 ## 参考资料
 

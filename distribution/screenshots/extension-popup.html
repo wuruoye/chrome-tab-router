@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=1280, initial-scale=1">
+  <title>Chrome 开发版扩展实际弹窗 · Chrome Tab Router</title>
+  <style>
+    :root { color-scheme: light; }
+    * { box-sizing: border-box; }
+    html, body { width: 1280px; height: 800px; margin: 0; overflow: hidden; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #203550; }
+    .canvas {
+      width: 1280px;
+      height: 800px;
+      display: grid;
+      grid-template-columns: 560px 1fr;
+      gap: 72px;
+      padding: 48px 72px;
+      background: #faf9f5;
+    }
+    .copy { align-self: center; padding-bottom: 6px; }
+    .brand { margin: 0 0 39px; font-size: 27px; font-weight: 650; letter-spacing: -.015em; }
+    h1 { margin: 0 0 34px; font-size: 60px; line-height: 1.22; font-weight: 700; letter-spacing: -.035em; }
+    .description { margin: 0 0 34px; font-size: 24px; color: #66717d; line-height: 1.6; }
+    .features { list-style: none; margin: 0 0 45px; padding: 0; display: grid; gap: 19px; }
+    .features li { display: flex; align-items: baseline; gap: 15px; font-size: 22px; line-height: 1.5; color: #43566d; }
+    .features li::before { content: ""; flex: 0 0 7px; height: 7px; border-radius: 50%; background: #d15b47; transform: translateY(-3px); }
+    .caption { display: inline-block; margin: 0; padding: 9px 14px; border: 1px solid #e6e1d8; border-radius: 8px; background: #fffefa; color: #697480; font-size: 16px; line-height: 1.5; }
+    .popup { margin: 0; height: 704px; display: flex; align-items: center; justify-content: center; }
+    .popup img { display: block; width: 504px; height: auto; max-width: 100%; max-height: 704px; object-fit: contain; box-shadow: 0 16px 44px rgb(32 53 80 / 9%); }
+  </style>
+</head>
+<body>
+  <main class="canvas" aria-label="1280×800 商店截图排版">
+    <section class="copy">
+      <p class="brand">Chrome Tab Router</p>
+      <h1>自动连接，<br>共用一份设置。</h1>
+      <p class="description">Chrome 扩展与 Mac 应用配合。</p>
+      <ul class="features">
+        <li>打开扩展，自动检测本机连接。</li>
+        <li>刷新和匹配选项与 Mac 共用。</li>
+        <li>目标网址只在本机处理。</li>
+      </ul>
+      <p class="caption">开发版扩展实际弹窗 · 1.3.0</p>
+    </section>
+    <figure class="popup">
+      <img src="../assets/extension-popup-1.3.0.jpg" width="728" height="640" alt="Chrome Tab Router 1.3.0 开发版扩展的真实弹窗，显示已连接、网页链接接管已开启及与 Mac 共用的设置。">
+    </figure>
+  </main>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=1280, initial-scale=1">
+  <title>Mac 菜单栏实际界面 · Chrome Tab Router</title>
+  <style>
+    :root { color-scheme: light; }
+    * { box-sizing: border-box; }
+    html, body { width: 1280px; height: 800px; margin: 0; overflow: hidden; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #203550; }
+    .canvas {
+      width: 1280px;
+      height: 800px;
+      display: grid;
+      grid-template-columns: 560px 1fr;
+      gap: 72px;
+      padding: 48px 72px;
+      background: #faf9f5;
+    }
+    .copy { align-self: center; padding-bottom: 6px; }
+    .brand { margin: 0 0 39px; font-size: 27px; font-weight: 650; letter-spacing: -.015em; }
+    h1 { margin: 0 0 34px; font-size: 60px; line-height: 1.22; font-weight: 700; letter-spacing: -.035em; }
+    .description { margin: 0 0 34px; font-size: 24px; color: #66717d; line-height: 1.6; }
+    .features { list-style: none; margin: 0 0 45px; padding: 0; display: grid; gap: 19px; }
+    .features li { display: flex; align-items: baseline; gap: 15px; font-size: 22px; line-height: 1.5; color: #43566d; }
+    .features li::before { content: ""; flex: 0 0 7px; height: 7px; border-radius: 50%; background: #d15b47; transform: translateY(-3px); }
+    .caption { display: inline-block; margin: 0; padding: 9px 14px; border: 1px solid #e6e1d8; border-radius: 8px; background: #fffefa; color: #697480; font-size: 16px; line-height: 1.5; }
+    .menu { margin: 0; height: 704px; display: flex; align-items: center; justify-content: center; }
+    .menu img { display: block; height: 704px; width: auto; max-width: 100%; object-fit: contain; box-shadow: 0 16px 44px rgb(32 53 80 / 9%); }
+  </style>
+</head>
+<body>
+  <main class="canvas" aria-label="1280×800 商店截图排版">
+    <section class="copy">
+      <p class="brand">Chrome Tab Router</p>
+      <h1>打开链接，<br>回到已有页面。</h1>
+      <p class="description">所有设置都在 Mac 菜单栏里。</p>
+      <ul class="features">
+        <li>一键开关标签页复用。</li>
+        <li>按需更新网址或刷新页面。</li>
+        <li>集中管理网址匹配与例外网站。</li>
+      </ul>
+      <p class="caption">Mac 菜单栏实际界面 · 1.3.0</p>
+    </section>
+    <figure class="menu">
+      <img src="../assets/mac-menu-1.3.0.jpg" width="548" height="854" alt="Chrome Tab Router 1.3.0 的真实 Mac 菜单栏菜单，包含标签页复用、网址匹配、例外网站和扩展管理等设置。">
+    </figure>
+  </main>
+</body>
+</html>

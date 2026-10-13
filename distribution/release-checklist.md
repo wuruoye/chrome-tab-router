@@ -2,17 +2,17 @@
 
 核对日期：2026-10-13。准备版本：Mac 应用与扩展 1.3.0。本清单按仓库实现和下列 Chrome 官方资料整理。商店后台字段及审核结果以实际页面为准。当前只准备和更新草稿，尚未提交审核；提交审核、设置可见性和公开发布须另获用户授权。
 
-## 目前可在本地完成
+## 本地安装与材料
 
 - [x] 核对最终 `ChromeExtension/manifest.json` 的版本、权限和图标。仅保留功能必需的权限；`chrome.tabs.create()` 本身无需 `tabs` 权限。当前功能需要 `nativeMessaging`，因为 service worker 通过 `chrome.runtime.sendNativeMessage()` 调用本机 Mac 应用。`http://*/*`、`https://*/*` 和 `all_frames` 使脚本能在各网页的框架中识别用户点击的新标签页链接，应在商店隐私字段解释这一范围。
 - [x] 准备 128×128 PNG 扩展图标并写入 `icons.128`；同时准备 16×16 和 48×48 图标用于 Chrome 界面。图标需与最终 ZIP 中的文件一致。
 - [x] 执行 `sh scripts/package-extension.sh`。脚本校验 Manifest V3、版本、128×128 PNG 图标和 ZIP 内容，生成 `build/chrome-tab-router-extension-<version>.zip`。确认 `manifest.json` 位于 ZIP 根目录；每次更新使用高于已上传版本的版本号。
 - [x] 历史验证：扩展 1.2.0 已于 2026-10-13 在真实 Chrome 中完成加载、连接及网页链接验证：`target="_blank"` 的同路径链接保留原标签页并更新查询参数；不同路径只新增一个标签页。Mac 应用日志确认分别执行了复用更新和新建。
-- [ ] 提交审核前核对菜单栏中的全部开关、默认浏览器操作、扩展连接状态、安装说明，以及“例外网站”子菜单的域名添加、查看和删除操作。继续核对排除域名、暂停功能、本机应用不可用时的行为，以及 Command/中键点击。还须核对产品界面在处理浏览 URL 前清楚说明用途并取得用户同意，商店页面、隐私政策和实际界面用语应一致。
-- [x] Mac 1.3.0 已于 2026-10-13 完成构建与安装；严格签名检查、本机协议读取共享设置、正式扩展 ID 与一个已批准开发版 ID 的允许来源检查均通过。允许来源已配置，实际 Chrome 自动连接仍待验证。
-- [ ] 在真实 Chrome 中重载扩展 1.3.0，核对扩展弹窗的本次连接结果，再验证自动连接、同路径参数更新和不同路径新开页面。
-- [ ] 制作至少一张真实功能截图，尺寸为 1280×800 或 640×400，方角且无留白。采集菜单栏设置界面、Chrome 扩展连接界面及实际点击验证画面，并按商店尺寸整理。
-- [x] 准备补充安装说明截图 `assets/installation-page-1280x800.jpg`，已于 2026-10-13 核对尺寸为 1280×800。画面来自真实线上安装说明网页，仅用于说明安装流程；菜单栏、扩展弹窗和功能验证截图仍待完成。
+- [x] Mac 1.3.0 已于 2026-10-13 完成构建与安装；严格签名检查、本机协议读取共享设置、正式扩展 ID 与一个已批准开发版 ID 的允许来源检查均通过。
+- [x] 用户于 2026-10-13 确认 Chrome 扩展 1.3.0 已重载，并自动显示“已连接”。
+- [x] 主线程于 2026-10-13 在真实 Chrome 工具栏打开开发版扩展 `epmhbckoikdfejlaelgbihlbmhplopld` 的弹窗，看到“已连接 · 网页链接接管已开启”，并核对共享设置与 Mac 当前设置一致。已保存 728×640 原始弹窗截图 `assets/extension-popup-1.3.0.jpg`。
+- [x] 准备补充安装说明截图 `assets/installation-page-1280x800.jpg`，已于 2026-10-13 核对尺寸为 1280×800。画面来自真实线上安装说明网页，用于说明安装流程。
+- [x] 从真实主菜单和开发版扩展弹窗原图生成 `assets/mac-menu-1280x800.jpg` 与 `assets/extension-popup-1280x800.jpg`。主线程已视觉核对，`sips` 实测两份均为 1280×800；对应排版页为 `screenshots/mac-menu.html` 和 `screenshots/extension-popup.html`。
 - [x] 制作 440×280 小宣传图，文件为 `assets/chrome-web-store-small-promo.png`，可编辑原稿为同名 SVG。素材已于 2026-10-13 检查尺寸、文字与配色；宣传图只说明已实现的标签页复用功能。
 - [x] 准备完整的商店填写材料、安装说明和审核测试步骤，文件为 `distribution/store-listing.md`、`README.md` 和 `docs/index.html`。公开开发者名称使用 wuruoye，支持渠道为 [GitHub Issues](https://github.com/wuruoye/chrome-tab-router/issues)。
 - [x] 准备无占位符的隐私政策正文及静态页面，文件为 `distribution/privacy-policy.md` 和 `docs/privacy.html`，生效日期为 2026-10-13。公开页面不含私人联系方式、分析脚本或表单。
@@ -24,18 +24,30 @@
 - [x] GitHub Pages 已使用 `main:/docs` 部署，2026-10-13 核验最新构建状态为 `built`，[安装说明与验证页面](https://wuruoye.github.io/chrome-tab-router/)已部署，[隐私政策](https://wuruoye.github.io/chrome-tab-router/privacy.html)返回 HTTP 200，均为公开页面。
 - [x] 本项目自有的 [同路径示例](https://wuruoye.github.io/chrome-tab-router/demo/reuse.html?id=1#first)和[不同路径示例](https://wuruoye.github.io/chrome-tab-router/demo/other.html?id=3)已上线，2026-10-13 核验均返回 HTTP 200。页面仅展示自身完整地址、参数和锚点，无后台请求或追踪；用于更新参数、复用标签页及不同路径新开页面的审核演示和截图。
 
-## 开发者账户与草稿
+## 商店草稿
 
-- [ ] 选定负责发布的 Google 账户。Chrome Web Store 要求注册开发者账户、接受协议并支付一次性注册费。官方 2026 年页面提及 5 美元，实际金额和付款条件以注册页面显示为准。账户邮箱创建后不能直接修改。
-- [ ] 在 Account 页面填写发布者名称、验证联系邮箱，并为 Google 账户开启两步验证。发布者还须声明 Trader 或 Non-Trader；若选择 Trader，按后台要求完成身份验证，法律名称、电话和地址等资料可能展示在商店页面。不要在文案中预填个人资料。
-- [x] 扩展 1.2.0 已于 2026-10-13 上传商店草稿，Item ID 为 `iineonbhdnmadlkkmdcofakekmjpnkmn`，尚未提交审核。
-- [ ] 将最终扩展 1.3.0 ZIP 更新到同一商店草稿，核对 Package 页面版本及权限；先不提交审核。
-- [ ] 在 Package 页 **View public key** 获取该项目的公钥。若本地解压加载需要与商店草稿保持同一个扩展 ID，可按官方 `manifest.key` 文档将公钥内容写入本地开发用 Manifest，并核对 `chrome://extensions` 的 ID。公钥与私钥不同，不要上传私钥。
+- [x] 已使用注册开发者账户创建并更新本项目草稿。
+- [x] 扩展 1.2.0 首次于 2026-10-13 上传商店草稿，Item ID 为 `iineonbhdnmadlkkmdcofakekmjpnkmn`，尚未提交审核。
+- [x] 用户于 2026-10-13 确认扩展 1.3.0 ZIP 已上传到同一商店草稿。
+- [x] 主线程于 2026-10-13 上传原 1.3.0 ZIP 后，在 Package 页面明确核对到版本 1.3.0、`nativeMessaging` 与主机权限范围；尚未提交审核。
+- [x] 主线程在 Package 页读取公钥，保存为 [chrome-extension-public-key.pem](chrome-extension-public-key.pem)。已准备[正式 ID 本地验证说明](official-id-testing.md)和 `build/ChromeExtension-store-id/` 测试副本；实际 Chrome 显示的正式 ID 与自动连接仍待用户加载后核对。
 - [x] 核对 Mac 应用的 Native Messaging host 允许来源已包含商店草稿的扩展 ID 和一个此前已批准的开发版 ID；该 host 仅允许正式 ID 和用户明确连接的开发版 ID。
-- [ ] 在真实 Chrome 中验证正式 ID 的自动连接；如使用本地开发版，同时核对已批准的开发版 ID 仍可连接。允许来源配置通过不代表实际连接验证已完成。
-- [ ] 在 Store Listing 填入最终标题、简述、详细说明、截图和宣传图；在 Privacy 填入唯一用途、每项权限及网站访问范围的理由、数据处理分类和公开隐私政策 URL。点击链接的完整 URL 以及 Mac 应用读取的现有标签页 URL 属于浏览活动数据；即使只在本机处理也必须如实披露。后台分类选项以实际页面为准，不应填写“完全不处理用户数据”。
-- [ ] 在 Distribution 选择销售模式、地区和可见性。Public 可被所有用户看到和安装；Unlisted 持链接者可安装；Private 限指定测试者。三种可见性都经过相同政策审核。若要先让指定测试者安装，添加 trusted testers，并选择 Private。
-- [ ] 将 `distribution/store-listing.md` 中完整的 Test instructions 填入草稿，包含 App 下载、安装与连接、菜单栏设置、无账号验证链接和预期结果。该字段按官方说明不是发布必填项。
+- [x] 已批准开发版 ID 的真实弹窗连接与共享设置已由主线程核对。
+- [x] 用户于 2026-10-13 确认说明、首页和支持网址在前台显示正常。
+- [x] 主线程于 2026-10-13 在 Privacy 表单填入单一用途、`nativeMessaging` 理由、主机访问范围理由和隐私政策网址；选择不使用远程代码，勾选数据类别“网络记录”和“网站内容”（表单举例包含超链接），并勾选三项符合实际处理行为的 Limited Use 披露。保存后看到“已成功保存内容。”。
+- [x] Store Listing 分类为“工具”，语言为“中文（中国）”；128×128 商店图标、440×280 宣传图及 1280×800 补充安装说明截图均已上传并保存。说明、首页和支持网址的前台显示已由用户确认。
+- [x] 商品详细说明最终为 1376 字，修复连接操作已写为“若弹窗仍显示未连接”时使用；主线程确认最终保存进度结束。
+- [x] 商品详情中的三张截图已上传、保存并在返回页面后确认留存；顺序为 Mac 菜单栏、开发版扩展连接弹窗、安装说明。
+- [x] 已只读核对 Distribution 的原有设置为免费、公开、所有地区，保留原设置。
+- [x] Test instructions 表单上限为 500 字，主线程保存了 `distribution/store-listing.md` 中的 444 字短版，并看到“已保存测试说明”。完整 9 步保留在材料详细版，公开安装页提供安装与验证说明。
+
+## 提审前验证与账户事项
+
+- [ ] 在真实 Chrome 中实际加载并核对正式商店 ID `iineonbhdnmadlkkmdcofakekmjpnkmn` 的自动连接。开发版弹窗验证与允许来源配置检查均不能代替正式 ID 的实际验证。
+- [ ] 在真实 Chrome 中对扩展 1.3.0 实测同路径参数更新和不同路径新开页面；继续核对 Command/中键点击、例外域名、暂停功能及本机应用不可用时的行为。
+- [ ] 提审前核对菜单栏操作、产品用途与数据处理说明，确认商店、隐私政策和产品界面一致。
+- [ ] 在开发者账户中提供联系邮箱。
+- [ ] 验证发布方联系邮箱。主线程只读查看“我为何无法提交”时，后台仅提示提供联系邮箱与验证发布方联系邮箱这两项账户要求，由账户持有人完成。
 
 ## 提审和公开发布
 
