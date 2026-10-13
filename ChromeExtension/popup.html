@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <title>Chrome Tab Router</title>
+  <style>
+    :root { color-scheme: light dark; }
+    body { width: 290px; margin: 0; padding: 20px; font: 13px -apple-system, BlinkMacSystemFont, sans-serif; }
+    h1 { margin: 0 0 10px; font-size: 17px; }
+    p { color: #777; line-height: 1.6; }
+    .button { display: block; box-sizing: border-box; width: 100%; padding: 9px; border: 0; border-radius: 8px; background: #1d3557; color: white; text-align: center; text-decoration: none; cursor: pointer; }
+    #connect:not([hidden]) + #settings { margin-top: 8px; }
+    .button.secondary { background: #e9edf2; color: #1d3557; }
+    [hidden] { display: none !important; }
+    #state { font-weight: 600; }
+  </style>
+</head>
+<body>
+  <h1>Chrome Tab Router</h1>
+  <div id="state">正在连接 Mac 应用…</div>
+  <p id="details">网页中的新标签页链接由 Mac 应用统一处理。</p>
+  <p>连接并开启接管后，你点击的新标签页链接会交给本机 Mac 应用。应用仅在本机查看 Chrome 已有标签页的网址；这些信息不会上传到开发者服务器。</p>
+  <a class="button" id="connect" hidden>连接 Mac 应用</a>
+  <a class="button secondary" id="settings" href="chrometabrouter://settings">打开 Mac 设置</a>
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="440" height="280" viewBox="0 0 440 280" role="img" aria-labelledby="title description">
+  <title id="title">Chrome Tab Router</title>
+  <desc id="description">重复链接，回到原标签页。三条相同链接汇入一个已有标签页。macOS · 配合 Chrome 扩展。</desc>
+  <defs>
+    <style>
+      .latin { font-family: Arial, Helvetica, sans-serif; }
+      .chinese { font-family: "Hiragino Sans GB", "PingFang SC", "Microsoft YaHei", sans-serif; }
+    </style>
+    <g id="link-symbol" fill="none" stroke="#17324f" stroke-width="2" stroke-linecap="round">
+      <path d="M9 6 6 9a4 4 0 0 0 6 6l3-3"/>
+      <path d="m12 9 3-3a4 4 0 0 1 6 6l-3 3"/>
+      <path d="m10 14 7-7"/>
+    </g>
+  </defs>
+
+  <rect width="440" height="280" fill="#faf6ee"/>
+
+  <text class="latin" x="26" y="48" fill="#132b49" font-size="27" font-weight="700" letter-spacing="-.45">Chrome Tab Router</text>
+  <circle cx="408" cy="39" r="5" fill="#f34d38"/>
+  <text class="chinese" x="26" y="79" fill="#17324f" font-size="19">重复链接，回到原标签页</text>
+
+  <!-- Three equal link cards join a single existing tab. -->
+  <g fill="#fffdf8" stroke="#dedfdc" stroke-width="1">
+    <rect x="26" y="108" width="126" height="34" rx="10"/>
+    <rect x="26" y="150" width="126" height="34" rx="10"/>
+    <rect x="26" y="192" width="126" height="34" rx="10"/>
+  </g>
+  <use href="#link-symbol" x="38" y="112"/>
+  <use href="#link-symbol" x="38" y="154"/>
+  <use href="#link-symbol" x="38" y="196"/>
+  <g class="chinese" fill="#17324f" font-size="13">
+    <text x="74" y="130">同一链接</text>
+    <text x="74" y="172">同一链接</text>
+    <text x="74" y="214">同一链接</text>
+  </g>
+
+  <g fill="none" stroke="#17324f" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M152 125h16c14 0 14 42 29 42h30"/>
+    <path d="M152 167h75"/>
+    <path d="M152 209h16c14 0 14-42 29-42"/>
+    <path d="m220 161 7 6-7 6"/>
+  </g>
+  <circle cx="197" cy="167" r="5" fill="#f34d38"/>
+
+  <!-- Single existing tab. -->
+  <path d="M245 119a12 12 0 0 1 12-12h70a12 12 0 0 1 10 5l10 14h51a16 16 0 0 1 16 16v64a16 16 0 0 1-16 16H261a16 16 0 0 1-16-16Z" fill="#132b49"/>
+  <g fill="#faf6ee">
+    <circle cx="260" cy="119" r="2.5"/>
+    <circle cx="270" cy="119" r="2.5"/>
+    <circle cx="280" cy="119" r="2.5"/>
+  </g>
+  <text class="chinese" x="329.5" y="158" text-anchor="middle" fill="#faf6ee" font-size="16">已有标签页</text>
+  <path d="M342 200h5a12 12 0 0 0 0-24h-38" fill="none" stroke="#faf6ee" stroke-width="7" stroke-linecap="round"/>
+  <path d="m311 167-13 9 13 9Z" fill="#f34d38"/>
+
+  <text x="220" y="257" text-anchor="middle" fill="#617086" font-family="Arial, 'Hiragino Sans GB', 'PingFang SC', sans-serif" font-size="13">macOS · 配合 Chrome 扩展</text>
+</svg>

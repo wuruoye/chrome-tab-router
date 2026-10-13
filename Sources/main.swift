@@ -1,0 +1,487 @@
+import AppKit
+import Carbon
+import ServiceManagement
+
+let appName = "Chrome Tab Router"
+let chromeBundleID = "com.google.Chrome"
+let supportedSchemes = ["http", "https"]
+
+if CommandLine.arguments.contains("--native-host") { runNativeHost() }
+if let index = CommandLine.arguments.firstIndex(of: "--connect-extension"), CommandLine.arguments.count > index + 1 {
+    do {
+        try connectExtension(CommandLine.arguments[index + 1])
+        print("Chrome 扩展已连接。")
+        exit(0)
+    } catch { fputs("\(error)\n", stderr); exit(1) }
+}
+
+func handlerID(for scheme: String) -> String? {
+    guard let link = URL(string: "\(scheme)://example.invalid/"),
+          let application = NSWorkspace.shared.urlForApplication(toOpen: link) else { return nil }
+    return Bundle(url: application)?.bundleIdentifier
+}
+
+if CommandLine.arguments.contains("--status") {
+    let handlers = Dictionary(uniqueKeysWithValues: supportedSchemes.map {
+        ($0, handlerID(for: $0) ?? "")
+    })
+    let data = try JSONSerialization.data(withJSONObject: handlers, options: [.prettyPrinted, .sortedKeys])
+    print(String(decoding: data, as: UTF8.self))
+    exit(0)
+}
+
+final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSTextFieldDelegate {
+    private var statusItem: NSStatusItem!
+    private var window: NSWindow?
+    private var statusLabel: NSTextField?
+    private var resultLabel: NSTextField?
+    private var defaultButton: NSButton?
+    private var restoreButton: NSButton?
+    private let routingEngine = RoutingEngine()
+    private var settingButtons: [String: NSButton] = [:]
+    private var loginButton: NSButton?
+    private var extensionLabel: NSTextField?
+    private var pendingURLs: [URL] = []
+    private var isRouting = false
+    private var isChangingDefault = false
+    private let preferences = UserDefaults.standard
+    private var lastResult = "等待打开链接。"
+    private let log = Logger()
+
+    func applicationWillFinishLaunching(_ notification: Notification) {
+        NSAppleEventManager.shared().setEventHandler(
+            self, andSelector: #selector(receiveURL(_:withReplyEvent:)),
+            forEventClass: AEEventClass(kInternetEventClass), andEventID: AEEventID(kAEGetURL)
+        )
+    }
+
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        buildMenu()
+        if CommandLine.arguments.contains("--setup") {
+            showSettings(nil)
+        }
+        if !pendingURLs.isEmpty {
+            processNextURL()
+        } else if !preferences.bool(forKey: "hasLaunched") {
+            showSettings(nil)
+        }
+        preferences.set(true, forKey: "hasLaunched")
+        if CommandLine.arguments.contains("--make-default") {
+            makeDefault(nil)
+        }
+    }
+
+    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
+        showSettings(nil)
+        return true
+    }
+
+    func windowDidBecomeKey(_ notification: Notification) {
+        updateStatus()
+    }
+
+    @objc private func receiveURL(_ event: NSAppleEventDescriptor, withReplyEvent reply: NSAppleEventDescriptor) {
+        guard let value = event.paramDescriptor(forKeyword: AEKeyword(keyDirectObject))?.stringValue,
+              let url = URL(string: value) else { return }
+        if url.scheme?.lowercased() == "chrometabrouter" {
+            if url.host == "connect" {
+                let identifier = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems?
+                    .first(where: { $0.name == "extensionID" })?.value ?? ""
+                do {
+                    guard identifier.range(of: "^[a-p]{32}$", options: .regularExpression) != nil else {
+                        throw RouterError(message: "扩展连接请求中的 ID 无效。", code: 0)
+                    }
+                    if let previous = preferences.string(forKey: "chromeExtensionID"), previous != identifier {
+                        let alert = NSAlert()
+                        alert.messageText = "更换 Chrome 扩展连接？"
+                        alert.informativeText = "继续后会连接这次发起请求的扩展，原扩展将断开。请确认你刚刚在 Chrome Tab Router 扩展弹窗中点击了连接。\n\n原扩展：\(previous)\n新扩展：\(identifier)"
+                        alert.addButton(withTitle: "更换连接")
+                        alert.addButton(withTitle: "取消")
+                        NSApp.activate(ignoringOtherApps: true)
+                        guard alert.runModal() == .alertFirstButtonReturn else { return }
+                    }
+                    try connectExtension(identifier)
+                    lastResult = "Chrome 扩展已连接，请重新打开扩展弹窗确认。"
+                    showSettings(nil)
+                } catch {
+                    showMessage("扩展连接未完成", (error as? RouterError)?.message ?? error.localizedDescription)
+                }
+            }
+            if url.host == "settings" { showSettings(nil) }
+            if url.host == "make-default" { makeDefault(nil) }
+            if url.host == "restore-default" { restoreDefault(nil) }
+            return
+        }
+        enqueue(url)
+    }
+
+    private func enqueue(_ url: URL) {
+        guard let scheme = url.scheme?.lowercased(), supportedSchemes.contains(scheme),
+              url.host != nil else {
+            showMessage("链接无法打开", "请使用完整的 http 或 https 链接。")
+            return
+        }
+        var components = URLComponents(url: url, resolvingAgainstBaseURL: false)
+        components?.scheme = scheme
+        let normalizedHost = components?.host?.lowercased()
+        components?.host = normalizedHost
+        if components?.path.isEmpty == true { components?.path = "/" }
+        if (scheme == "http" && components?.port == 80) || (scheme == "https" && components?.port == 443) {
+            components?.port = nil
+        }
+        pendingURLs.append(components?.url ?? url)
+        if statusItem != nil { processNextURL() }
+    }
+
+    private func processNextURL() {
+        guard !isRouting, !pendingURLs.isEmpty else { return }
+        isRouting = true
+        let url = pendingURLs.removeFirst()
+        DispatchQueue.main.async { [self] in
+            do {
+                let result = try route(url)
+                switch result {
+                case "reused-updated": lastResult = "已复用原标签页并载入新链接。"
+                case "reused-refreshed": lastResult = "已切换到已有标签页并刷新。"
+                case "reused": lastResult = "已切换到已有标签页。"
+                default: lastResult = "已在 Chrome 新开标签页。"
+                }
+                log.write(result)
+            } catch {
+                log.write("routing-failed")
+                handleRoutingError(error, url: url)
+            }
+            isRouting = false
+            updateStatus()
+            processNextURL()
+        }
+    }
+
+    private func route(_ url: URL) throws -> String {
+        try routingEngine.route(url)
+    }
+
+    private func handleRoutingError(_ error: Error, url: URL) {
+        let routerError = error as? RouterError
+        let alert = NSAlert()
+        alert.messageText = "链接尚未打开"
+        if routerError?.code == -1743 {
+            alert.informativeText = "请在系统设置的“隐私与安全性 → 自动化”中，允许 Chrome Tab Router 控制 Google Chrome，然后重新打开这个链接。"
+            alert.addButton(withTitle: "打开自动化设置")
+        } else {
+            alert.informativeText = routerError?.message ?? error.localizedDescription
+            alert.addButton(withTitle: "重试")
+        }
+        alert.addButton(withTitle: "直接用 Chrome 打开")
+        alert.addButton(withTitle: "取消")
+        NSApp.activate(ignoringOtherApps: true)
+        let response = alert.runModal()
+        if response == .alertFirstButtonReturn {
+            if routerError?.code == -1743 { openAutomationSettings(nil) }
+            else { pendingURLs.insert(url, at: 0) }
+        } else if response == .alertSecondButtonReturn {
+            openDirectlyInChrome(url)
+        }
+        lastResult = "打开链接时遇到问题，可以重新打开链接重试。"
+    }
+
+    private func openDirectlyInChrome(_ url: URL) {
+        guard let chrome = NSWorkspace.shared.urlForApplication(withBundleIdentifier: chromeBundleID) else { return }
+        NSWorkspace.shared.open([url], withApplicationAt: chrome, configuration: NSWorkspace.OpenConfiguration())
+    }
+
+    private func buildMenu() {
+        statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
+        statusItem.button?.image = NSImage(systemSymbolName: "arrow.triangle.2.circlepath", accessibilityDescription: appName)
+        statusItem.button?.toolTip = appName
+        let menu = NSMenu()
+        menu.addItem(withTitle: "Chrome Tab Router", action: nil, keyEquivalent: "")
+        menu.addItem(.separator())
+        addItem("设置…", action: #selector(showSettings(_:)), to: menu)
+        addItem("打开剪贴板中的链接", action: #selector(openClipboard(_:)), to: menu)
+        menu.addItem(.separator())
+        addItem("退出", action: #selector(quit(_:)), to: menu)
+        statusItem.menu = menu
+    }
+
+    private func addItem(_ title: String, action: Selector, to menu: NSMenu) {
+        let item = NSMenuItem(title: title, action: action, keyEquivalent: "")
+        item.target = self
+        menu.addItem(item)
+    }
+
+    @objc private func showSettings(_ sender: Any?) {
+        if window == nil { buildWindow() }
+        updateStatus()
+        window?.makeKeyAndOrderFront(nil)
+        NSApp.activate(ignoringOtherApps: true)
+    }
+
+    private func buildWindow() {
+        let panel = NSWindow(
+            contentRect: NSRect(x: 0, y: 0, width: 590, height: 760),
+            styleMask: [.titled, .closable, .miniaturizable], backing: .buffered, defer: false
+        )
+        panel.title = appName
+        panel.isReleasedWhenClosed = false
+        panel.delegate = self
+        panel.center()
+        let title = NSTextField(labelWithString: "打开链接，回到已有页面")
+        title.font = .systemFont(ofSize: 23, weight: .semibold)
+        let description = NSTextField(wrappingLabelWithString: "已有相同网址时，切换到那个 Chrome 标签页并刷新。\n没有相同网址时，在 Chrome 新开标签页。")
+        description.font = .systemFont(ofSize: 14)
+        description.textColor = .secondaryLabelColor
+        let matching = NSTextField(wrappingLabelWithString: "设置自动保存。默认按完整网址匹配，可分别忽略参数或锚点。")
+        matching.font = .systemFont(ofSize: 12)
+        matching.textColor = .secondaryLabelColor
+        let status = NSTextField(wrappingLabelWithString: "")
+        status.font = .systemFont(ofSize: 14, weight: .medium)
+        statusLabel = status
+        let makeButton = NSButton(title: "设为默认浏览器", target: self, action: #selector(makeDefault(_:)))
+        makeButton.bezelStyle = .rounded
+        defaultButton = makeButton
+        let restore = NSButton(title: "恢复原来的默认浏览器", target: self, action: #selector(restoreDefault(_:)))
+        restore.bezelStyle = .rounded
+        restoreButton = restore
+        let buttons = NSStackView(views: [makeButton, restore])
+        buttons.orientation = .horizontal
+        buttons.spacing = 10
+        let automation = NSButton(title: "打开 Chrome 自动化权限设置", target: self, action: #selector(openAutomationSettings(_:)))
+        automation.bezelStyle = .rounded
+        let result = NSTextField(wrappingLabelWithString: lastResult)
+        result.font = .systemFont(ofSize: 12)
+        result.textColor = .secondaryLabelColor
+        resultLabel = result
+        let settings = RoutingSettings()
+        let checkOptions = [
+            ("enabled", "启用标签页复用"),
+            ("refreshReusedTabs", "切换到已有标签页后刷新"),
+            ("searchAllWindows", "在所有 Chrome 窗口中查找"),
+            ("ignoreFragments", "匹配时忽略页面锚点（# 后的内容）"),
+            ("ignoreTrackingParameters", "匹配时忽略常见跟踪参数（utm_、gclid 等）"),
+            ("ignoreQueryParameters", "匹配时忽略所有查询参数（? 后的内容）"),
+            ("useIncomingURL", "复用时更新为新链接（参数或锚点有变化时）"),
+            ("interceptBrowserLinks", "接管 Chrome 网页中打开新标签页的链接")
+        ]
+        let checks = NSStackView()
+        checks.orientation = .vertical
+        checks.alignment = .leading
+        checks.spacing = 9
+        for (key, label) in checkOptions {
+            let checkbox = NSButton(checkboxWithTitle: label, target: self, action: #selector(changeSetting(_:)))
+            checkbox.identifier = NSUserInterfaceItemIdentifier(key)
+            checkbox.state = settings[key] ? .on : .off
+            settingButtons[key] = checkbox
+            checks.addArrangedSubview(checkbox)
+        }
+        let login = NSButton(checkboxWithTitle: "登录时自动启动", target: self, action: #selector(changeLoginSetting(_:)))
+        loginButton = login
+        checks.addArrangedSubview(login)
+        let exclusionsLabel = NSTextField(labelWithString: "例外网站：这些网站每次新开，可填写域名及其子域名。")
+        exclusionsLabel.font = .systemFont(ofSize: 12)
+        exclusionsLabel.textColor = .secondaryLabelColor
+        let exclusions = NSTextField(string: preferences.string(forKey: "routing.excludedDomains") ?? "")
+        exclusions.placeholderString = "例如 gmail.com, docs.google.com（逗号分隔）"
+        exclusions.identifier = NSUserInterfaceItemIdentifier("excludedDomains")
+        exclusions.delegate = self
+        let exclusionsGroup = NSStackView(views: [exclusionsLabel, exclusions])
+        exclusionsGroup.orientation = .vertical
+        exclusionsGroup.alignment = .leading
+        exclusionsGroup.spacing = 5
+        exclusions.widthAnchor.constraint(equalToConstant: 514).isActive = true
+        let extensionStatus = NSTextField(wrappingLabelWithString: "")
+        extensionStatus.font = .systemFont(ofSize: 12)
+        extensionStatus.textColor = .secondaryLabelColor
+        extensionLabel = extensionStatus
+        let extensionButtons = NSStackView(views: [
+            NSButton(title: "打开扩展目录", target: self, action: #selector(openExtensionDirectory(_:))),
+            NSButton(title: "扩展安装与连接说明", target: self, action: #selector(connectChromeExtension(_:)))
+        ])
+        extensionButtons.orientation = .horizontal
+        extensionButtons.spacing = 10
+        for case let button as NSButton in extensionButtons.arrangedSubviews { button.bezelStyle = .rounded }
+        let stack = NSStackView(views: [title, description, matching, status, buttons, checks,
+                                      exclusionsGroup, extensionStatus, extensionButtons, automation, result])
+        stack.orientation = .vertical
+        stack.alignment = .leading
+        stack.spacing = 15
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        panel.contentView!.addSubview(stack)
+        NSLayoutConstraint.activate([
+            stack.leadingAnchor.constraint(equalTo: panel.contentView!.leadingAnchor, constant: 28),
+            stack.trailingAnchor.constraint(equalTo: panel.contentView!.trailingAnchor, constant: -28),
+            stack.topAnchor.constraint(equalTo: panel.contentView!.topAnchor, constant: 25)
+        ])
+        window = panel
+    }
+
+    private func updateStatus() {
+        let ownID = Bundle.main.bundleIdentifier
+        let isDefault = supportedSchemes.allSatisfy { handlerID(for: $0) == ownID }
+        statusLabel?.stringValue = isDefault ? "已设为系统默认浏览器。" : "尚未设为系统默认浏览器。"
+        defaultButton?.isEnabled = !isDefault && !isChangingDefault
+        restoreButton?.isEnabled = preferences.dictionary(forKey: "previousHandlers") != nil && !isChangingDefault
+        resultLabel?.stringValue = lastResult
+        let settings = RoutingSettings()
+        for (key, button) in settingButtons { button.state = settings[key] ? .on : .off }
+        settingButtons["ignoreTrackingParameters"]?.isEnabled = !settings["ignoreQueryParameters"]
+        loginButton?.state = [.enabled, .requiresApproval].contains(SMAppService.mainApp.status) ? .on : .off
+        extensionLabel?.stringValue = preferences.string(forKey: "chromeExtensionID") == nil
+            ? "Chrome 网页链接需要先安装并连接配套扩展。" : "已登记扩展连接，请在 Chrome 扩展弹窗中确认“已连接”。"
+    }
+
+    @objc private func changeSetting(_ sender: NSButton) {
+        guard let key = sender.identifier?.rawValue else { return }
+        preferences.set(sender.state == .on, forKey: "routing.\(key)")
+        preferences.synchronize()
+        updateStatus()
+    }
+
+    func controlTextDidChange(_ notification: Notification) {
+        guard let field = notification.object as? NSTextField, field.identifier?.rawValue == "excludedDomains" else { return }
+        preferences.set(field.stringValue, forKey: "routing.excludedDomains")
+        preferences.synchronize()
+    }
+
+    @objc private func changeLoginSetting(_ sender: NSButton) {
+        do {
+            if sender.state == .on {
+                try SMAppService.mainApp.register()
+                if SMAppService.mainApp.status == .requiresApproval { SMAppService.openSystemSettingsLoginItems() }
+            } else { try SMAppService.mainApp.unregister() }
+        } catch { showMessage("登录启动设置未完成", error.localizedDescription) }
+        updateStatus()
+    }
+
+    @objc private func openExtensionDirectory(_ sender: Any?) {
+        guard let directory = Bundle.main.url(forResource: "ChromeExtension", withExtension: nil) else { return }
+        NSWorkspace.shared.activateFileViewerSelecting([directory])
+        if let chrome = NSWorkspace.shared.urlForApplication(withBundleIdentifier: chromeBundleID) {
+            NSWorkspace.shared.open([URL(string: "chrome://extensions/")!], withApplicationAt: chrome,
+                                    configuration: NSWorkspace.OpenConfiguration())
+        }
+    }
+
+    @objc private func connectChromeExtension(_ sender: Any?) {
+        let alert = NSAlert()
+        alert.messageText = "连接 Chrome 扩展"
+        alert.informativeText = "先在 Chrome 的扩展管理页开启开发者模式，加载配套扩展目录。然后点击 Chrome 工具栏中的本扩展，选择“连接 Mac 应用”并允许打开。扩展会自动完成连接。"
+        alert.addButton(withTitle: "好")
+        alert.runModal()
+    }
+
+    @objc private func makeDefault(_ sender: Any?) {
+        guard !isChangingDefault else { return }
+        let ownID = Bundle.main.bundleIdentifier
+        if preferences.dictionary(forKey: "previousHandlers") == nil {
+            var previous: [String: String] = [:]
+            for scheme in supportedSchemes {
+                if let identifier = handlerID(for: scheme), identifier != ownID { previous[scheme] = identifier }
+            }
+            if !previous.isEmpty { preferences.set(previous, forKey: "previousHandlers") }
+        }
+        setHandlers(supportedSchemes.map { ($0, Bundle.main.bundleURL) }, message: "已设为系统默认浏览器。")
+    }
+
+    @objc private func restoreDefault(_ sender: Any?) {
+        guard !isChangingDefault,
+              let previous = preferences.dictionary(forKey: "previousHandlers") as? [String: String] else { return }
+        var targets: [(String, URL)] = []
+        for scheme in supportedSchemes {
+            guard let identifier = previous[scheme],
+                  let app = NSWorkspace.shared.urlForApplication(withBundleIdentifier: identifier) else {
+                showMessage("无法恢复默认浏览器", "原来的浏览器已被移动或删除，请在系统设置中选择默认浏览器。")
+                return
+            }
+            targets.append((scheme, app))
+        }
+        setHandlers(targets, message: "已恢复原来的默认浏览器。")
+    }
+
+    private func setHandlers(_ targets: [(String, URL)], message: String) {
+        isChangingDefault = true
+        updateStatus()
+        setNextHandler(targets, index: 0, message: message)
+    }
+
+    private func setNextHandler(_ targets: [(String, URL)], index: Int, message: String) {
+        guard index < targets.count else {
+            isChangingDefault = false
+            lastResult = message
+            log.write("default-handler-updated")
+            updateStatus()
+            return
+        }
+        let (scheme, target) = targets[index]
+        NSWorkspace.shared.setDefaultApplication(at: target, toOpenURLsWithScheme: scheme) { [weak self] error in
+            DispatchQueue.main.async {
+                guard let self else { return }
+                if let error {
+                    self.isChangingDefault = false
+                    self.updateStatus()
+                    self.showMessage("默认浏览器未设置完成", error.localizedDescription)
+                } else {
+                    self.setNextHandler(targets, index: index + 1, message: message)
+                }
+            }
+        }
+    }
+
+    @objc private func openClipboard(_ sender: Any?) {
+        guard let value = NSPasteboard.general.string(forType: .string),
+              let url = URL(string: value.trimmingCharacters(in: .whitespacesAndNewlines)) else {
+            showMessage("没有找到链接", "请先复制一个完整的 http 或 https 链接。")
+            return
+        }
+        enqueue(url)
+    }
+
+    @objc private func openAutomationSettings(_ sender: Any?) {
+        NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Automation")!)
+    }
+
+    @objc private func quit(_ sender: Any?) { NSApp.terminate(nil) }
+
+    private func showMessage(_ title: String, _ message: String) {
+        let alert = NSAlert()
+        alert.messageText = title
+        alert.informativeText = message
+        alert.addButton(withTitle: "好")
+        NSApp.activate(ignoringOtherApps: true)
+        alert.runModal()
+    }
+}
+
+struct RouterError: Error {
+    let message: String
+    let code: Int
+}
+
+final class Logger {
+    private let destination: URL
+    init() {
+        let directory = FileManager.default.homeDirectoryForCurrentUser
+            .appendingPathComponent("Library/Logs/ChromeTabRouter", isDirectory: true)
+        try? FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        destination = directory.appendingPathComponent("events.log")
+    }
+    func write(_ action: String) {
+        // Only timestamps and action names are recorded. URLs are never logged.
+        let line = "\(ISO8601DateFormatter().string(from: Date())) \(action)\n"
+        let data = Data(line.utf8)
+        if !FileManager.default.fileExists(atPath: destination.path) {
+            FileManager.default.createFile(atPath: destination.path, contents: data,
+                                           attributes: [.posixPermissions: 0o600])
+        } else if let handle = try? FileHandle(forWritingTo: destination) {
+            defer { try? handle.close() }
+            _ = try? handle.seekToEnd()
+            try? handle.write(contentsOf: data)
+        }
+    }
+}
+
+let app = NSApplication.shared
+app.setActivationPolicy(.accessory)
+let delegate = AppDelegate()
+app.delegate = delegate
+app.run()
