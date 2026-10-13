@@ -1,6 +1,6 @@
 # 正式扩展 ID 本地验证
 
-准备版本：1.3.0。材料核对日期：2026-10-13。正式 ID 的 Chrome 显示及自动连接仍须实际核对，尚未提交审核。
+验证版本：1.3.0。核对日期：2026-10-13。真实 Chrome 弹窗实际来源已核对为 `chrome-extension://iineonbhdnmadlkkmdcofakekmjpnkmn/popup.html`，显示“已连接 · 网页链接接管已开启”；Mac 应用最近连接记录为同一正式 ID。同完整网址的普通、Command 和中键点击复用，以及不同路径新开均已通过实测。当前通过开发者模式加载，尚未提交商店审核。
 
 正式 Item ID：`iineonbhdnmadlkkmdcofakekmjpnkmn`。公钥保存于 [chrome-extension-public-key.pem](chrome-extension-public-key.pem)，已通过 `openssl pkey -pubin -noout` 校验。
 

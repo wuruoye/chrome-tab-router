@@ -2,7 +2,7 @@
 
 准备版本：1.3.0。核对日期：2026-10-13。1.3.0 预览版安装包及公开页面已完成发布核验；同一商店草稿的 Package 页面已核对版本 1.3.0、`nativeMessaging` 与主机权限范围。商品详细说明为 1362 字，官网与隐私政策地址使用 Ruoye 服务器页面。商品详情已显示“已成功保存内容。”，先不提交审核。
 
-Mac 1.3.0 已构建安装，严格签名检查、本机协议读取共享设置及允许来源配置已通过。真实 Chrome 工具栏中的开发版扩展 `epmhbckoikdfejlaelgbihlbmhplopld` 显示“已连接 · 网页链接接管已开启”。已实测同完整网址的普通、Command 和中键点击复用，以及不同路径新开。联系邮箱已通过 Google 验证。提亮后的菜单、新排版开发版弹窗与安装说明三张截图已上传保存。正式商店 ID 的实际连接仍待验证，尚未提交审核。
+Mac 1.3.0 已构建安装，严格签名检查、本机协议读取共享设置及允许来源配置已通过。真实 Chrome 弹窗的实际来源已核对为正式商店 ID `iineonbhdnmadlkkmdcofakekmjpnkmn`，显示“已连接 · 网页链接接管已开启”；Mac 最近连接记录为同一 ID。已实测正式 ID 的同完整网址普通、Command 和中键点击复用，以及不同路径新开。联系邮箱已通过 Google 验证。提亮后的菜单、新排版开发版弹窗与安装说明三张截图已上传保存，尚未提交审核。
 
 Privacy 表单已于 2026-10-13 填写并保存：单一用途、`nativeMessaging` 理由、主机访问范围理由、隐私政策网址、不使用远程代码、数据类别“网络记录”和“网站内容”，以及三项 Limited Use 披露；隐私政策网址已更新为官网页面。商品分类、语言、图标、宣传图和三张截图已保存，Test instructions 已保存 437 字短版，并显示“已保存测试说明”。Distribution 已只读核对为免费、公开、所有地区，保留原设置。
 
@@ -98,7 +98,7 @@ App 下载：https://github.com/wuruoye/chrome-tab-router/releases/download/v1.3
 | `assets/mac-menu-1.3.0.jpg` | 548×854 | 真实 Mac 主菜单原图，用于生成排版截图。 |
 | `assets/extension-popup-1.3.0.jpg` | 728×640 | 真实开发版扩展连接弹窗原图，用于生成排版截图。 |
 
-两份界面图从真实原图生成，菜单背景已提亮，文字和设置保留，弹窗原图未修改；排版页为 [mac-menu.html](screenshots/mac-menu.html) 和 [extension-popup.html](screenshots/extension-popup.html)，最终 JPEG 为 1280×800。官网已上线，联系邮箱已验证，真实 Chrome 已完成同完整网址复用和不同路径新开的验证。正式商店 ID 的实际连接、参数与锚点更新及例外、暂停行为仍待提审前核对。公钥见 [chrome-extension-public-key.pem](chrome-extension-public-key.pem)，正式 ID 测试见 [official-id-testing.md](official-id-testing.md)，素材说明见 [assets/README.md](assets/README.md)。
+两份界面图从真实原图生成，菜单背景已提亮，文字和设置保留，弹窗原图未修改；排版页为 [mac-menu.html](screenshots/mac-menu.html) 和 [extension-popup.html](screenshots/extension-popup.html)，最终 JPEG 为 1280×800。官网已上线，联系邮箱已验证，正式商店 ID 的实际连接、同完整网址复用和不同路径新开已通过真实 Chrome 验证。参数与锚点更新及例外、暂停行为仍待提审前核对。公钥见 [chrome-extension-public-key.pem](chrome-extension-public-key.pem)，正式 ID 测试见 [official-id-testing.md](official-id-testing.md)，素材说明见 [assets/README.md](assets/README.md)。
 
 ## 参考资料
 

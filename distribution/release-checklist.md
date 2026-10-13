@@ -33,7 +33,7 @@
 - [x] 扩展 1.2.0 首次于 2026-10-13 上传商店草稿，Item ID 为 `iineonbhdnmadlkkmdcofakekmjpnkmn`，尚未提交审核。
 - [x] 用户于 2026-10-13 确认扩展 1.3.0 ZIP 已上传到同一商店草稿。
 - [x] 主线程于 2026-10-13 上传原 1.3.0 ZIP 后，在 Package 页面明确核对到版本 1.3.0、`nativeMessaging` 与主机权限范围；尚未提交审核。
-- [x] 主线程在 Package 页读取公钥，保存为 [chrome-extension-public-key.pem](chrome-extension-public-key.pem)。已准备[正式 ID 本地验证说明](official-id-testing.md)和 `build/ChromeExtension-store-id/` 测试副本；实际 Chrome 显示的正式 ID 与自动连接仍待用户加载后核对。
+- [x] 主线程在 Package 页读取公钥，保存为 [chrome-extension-public-key.pem](chrome-extension-public-key.pem)。已准备[正式 ID 本地验证说明](official-id-testing.md)和 `build/ChromeExtension-store-id/` 测试副本；用户加载后已核对真实弹窗的正式 ID 与自动连接。
 - [x] 核对 Mac 应用的 Native Messaging host 允许来源已包含商店草稿的扩展 ID 和一个此前已批准的开发版 ID；该 host 仅允许正式 ID 和用户明确连接的开发版 ID。
 - [x] 已批准开发版 ID 的真实弹窗连接与共享设置已由主线程核对。
 - [x] 用户于 2026-10-13 确认说明、首页和支持网址在前台显示正常。
@@ -47,7 +47,7 @@
 
 ## 提审前验证与账户事项
 
-- [ ] 在真实 Chrome 中实际加载并核对正式商店 ID `iineonbhdnmadlkkmdcofakekmjpnkmn` 的自动连接。开发版弹窗验证与允许来源配置检查均不能代替正式 ID 的实际验证。
+- [x] 2026-10-13 用户加载正式 ID 测试副本后，真实 Chrome 弹窗的实际 URL 为 `chrome-extension://iineonbhdnmadlkkmdcofakekmjpnkmn/popup.html`，显示“已连接 · 网页链接接管已开启”；Mac 应用的 `chromeExtensionLastContactID` 同时记录该正式 ID。按用户当前设置测试：首次新增标签页 `1803923998`，再次普通、Command 和中键点击均保留该标签页，总数保持 7；不同路径只新增 `1803924002`，总数为 8。两张验证截图保存在本地 `build/official-id-reuse-verification-1.3.0.jpg` 与 `build/official-id-other-path-verification-1.3.0.jpg`，测试结束仅清理本次创建的三个标签页。
 - [ ] 在开启忽略参数及锚点匹配后，实测 1.3.0 的同路径参数更新；继续核对例外域名、暂停功能及本机应用不可用时的行为。
 - [ ] 提审前核对菜单栏操作、产品用途与数据处理说明，确认商店、隐私政策和产品界面一致。
 - [x] 按用户明确授权，在开发者账户中提供公开联系邮箱。

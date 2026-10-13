@@ -75,13 +75,13 @@ zsh scripts/install.sh
 
 菜单栏显示“自动连接已配置”或最近连接时间，扩展弹窗显示本次检测结果。连接需要修复时，可先在菜单栏选择“修复自动连接”，再从扩展弹窗点击“重新检测”。若弹窗仍显示未连接，可点击“修复连接”，并在 Chrome 提示时允许打开本机应用；新开发版的连接请求还需在 App 中确认。已连接时可用“重新检测”或“打开 Mac 菜单”。
 
-2026-10-13 已在真实 Chrome 工具栏核对开发版扩展 1.3.0 的弹窗显示“已连接 · 网页链接接管已开启”，共享设置与 Mac 当前设置一致。正式商店 ID 的实际 Chrome 加载和自动连接仍待验证，具体状态见[发布清单](distribution/release-checklist.md)。
+2026-10-13 已在真实 Chrome 工具栏核对 1.3.0 弹窗实际来源为正式商店 ID `iineonbhdnmadlkkmdcofakekmjpnkmn`，显示“已连接 · 网页链接接管已开启”，Mac 应用最近连接记录也来自该 ID。普通、Command 和中键点击同完整网址均复用原标签页，不同路径只新增一页；具体状态见[发布清单](distribution/release-checklist.md)。
 
 网页新标签页链接、Command 点击和鼠标中键点击可在创建标签页前交给 Mac 应用。地址栏、书签、右键菜单、表单、脚本调用 `window.open()` 及普通当前页跳转由 Chrome 处理。匹配和路由会切换到目标标签页。
 
 只在支持扩展脚本的 HTTP/HTTPS 网页中运行；Chrome 内部页面和 Chrome Web Store 等受保护页面不支持。Mac 应用连接不可用时，扩展保留 Chrome 原有行为或尝试直接新开目标链接。
 
-正式发布准备见 [发布清单](distribution/release-checklist.md)、[商店填写材料](distribution/store-listing.md)和[隐私政策正文](distribution/privacy-policy.md)。运行 `sh scripts/package-extension.sh` 可生成 ZIP。2026-10-13 已核对商店草稿版本 1.3.0 及权限，商品说明、分类、语言、图标、宣传图和三张截图已保存；菜单图片已提亮，截图顺序为菜单栏、开发版扩展连接弹窗、安装说明。官网已部署到 Ruoye 服务器，联系邮箱已验证。真实 Chrome 已验证同完整网址的普通、Command 和中键点击复用，以及不同路径新开。正式商店 ID 的实际连接、参数与锚点更新、例外网站及暂停行为仍需提审前核对。尚未提交审核。
+正式发布准备见 [发布清单](distribution/release-checklist.md)、[商店填写材料](distribution/store-listing.md)和[隐私政策正文](distribution/privacy-policy.md)。运行 `sh scripts/package-extension.sh` 可生成 ZIP。2026-10-13 已核对商店草稿版本 1.3.0 及权限，商品说明、分类、语言、图标、宣传图和三张截图已保存；菜单图片已提亮，截图顺序为菜单栏、开发版扩展连接弹窗、安装说明。官网已部署到 Ruoye 服务器，联系邮箱已验证。正式 ID 的实际连接，以及同完整网址的普通、Command 和中键点击复用、不同路径新开已通过真实 Chrome 验证。参数与锚点更新、例外网站及暂停行为仍需提审前核对。尚未提交审核。
 
 ## 恢复与卸载
 
