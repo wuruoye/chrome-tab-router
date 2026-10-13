@@ -81,7 +81,7 @@ zsh scripts/install.sh
 
 只在支持扩展脚本的 HTTP/HTTPS 网页中运行；Chrome 内部页面和 Chrome Web Store 等受保护页面不支持。Mac 应用连接不可用时，扩展保留 Chrome 原有行为或尝试直接新开目标链接。
 
-正式发布准备见 [发布清单](distribution/release-checklist.md)、[商店填写材料](distribution/store-listing.md)和[隐私政策正文](distribution/privacy-policy.md)。运行 `sh scripts/package-extension.sh` 可生成 ZIP。2026-10-13 已核对商店草稿版本 1.3.0 及权限，商品说明、分类、语言、图标、宣传图和三张截图已保存；菜单图片已提亮，截图顺序为菜单栏、开发版扩展连接弹窗、安装说明。官网已部署到 Ruoye 服务器，联系邮箱已验证。正式 ID 的实际连接，以及同完整网址的普通、Command 和中键点击复用、不同路径新开已通过真实 Chrome 验证。参数与锚点更新、例外网站及暂停行为仍需提审前核对。尚未提交审核。
+正式发布准备见 [发布清单](distribution/release-checklist.md)、[商店填写材料](distribution/store-listing.md)和[隐私政策正文](distribution/privacy-policy.md)。运行 `sh scripts/package-extension.sh` 可生成 ZIP。2026-10-13 已核对商店草稿版本 1.3.0 及权限，商品说明、分类、语言、图标、宣传图和三张截图已保存；菜单图片已提亮，截图顺序为菜单栏、开发版扩展连接弹窗、安装说明。官网已部署到 Ruoye 服务器，联系邮箱已验证。正式 ID 的实际连接、同完整网址普通/Command/中键点击复用、不同路径新开、参数与锚点更新、例外网站和两种暂停开关均已通过真实 Chrome 验证。本次验证临时切换共享配置，原设置已恢复，测试页面已清理。尚未提交审核。
 
 ## 恢复与卸载
 

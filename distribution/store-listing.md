@@ -98,7 +98,7 @@ App 下载：https://github.com/wuruoye/chrome-tab-router/releases/download/v1.3
 | `assets/mac-menu-1.3.0.jpg` | 548×854 | 真实 Mac 主菜单原图，用于生成排版截图。 |
 | `assets/extension-popup-1.3.0.jpg` | 728×640 | 真实开发版扩展连接弹窗原图，用于生成排版截图。 |
 
-两份界面图从真实原图生成，菜单背景已提亮，文字和设置保留，弹窗原图未修改；排版页为 [mac-menu.html](screenshots/mac-menu.html) 和 [extension-popup.html](screenshots/extension-popup.html)，最终 JPEG 为 1280×800。官网已上线，联系邮箱已验证，正式商店 ID 的实际连接、同完整网址复用和不同路径新开已通过真实 Chrome 验证。参数与锚点更新及例外、暂停行为仍待提审前核对。公钥见 [chrome-extension-public-key.pem](chrome-extension-public-key.pem)，正式 ID 测试见 [official-id-testing.md](official-id-testing.md)，素材说明见 [assets/README.md](assets/README.md)。
+两份界面图从真实原图生成，菜单背景已提亮，文字和设置保留，弹窗原图未修改；排版页为 [mac-menu.html](screenshots/mac-menu.html) 和 [extension-popup.html](screenshots/extension-popup.html)，最终 JPEG 为 1280×800。官网已上线，联系邮箱已验证，正式商店 ID 的实际连接、同完整网址复用、不同路径新开、参数与锚点更新、例外网站和两种暂停开关均已通过真实 Chrome 验证。验证时临时切换共享配置，原设置与测试页面已恢复和清理。公钥见 [chrome-extension-public-key.pem](chrome-extension-public-key.pem)，正式 ID 测试见 [official-id-testing.md](official-id-testing.md)，素材说明见 [assets/README.md](assets/README.md)。
 
 ## 参考资料
 

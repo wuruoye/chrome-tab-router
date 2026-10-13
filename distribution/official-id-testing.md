@@ -2,6 +2,8 @@
 
 验证版本：1.3.0。核对日期：2026-10-13。真实 Chrome 弹窗实际来源已核对为 `chrome-extension://iineonbhdnmadlkkmdcofakekmjpnkmn/popup.html`，显示“已连接 · 网页链接接管已开启”；Mac 应用最近连接记录为同一正式 ID。同完整网址的普通、Command 和中键点击复用，以及不同路径新开均已通过实测。当前通过开发者模式加载，尚未提交商店审核。
 
+2026-10-13 已继续使用同一正式 ID 验证共享配置：忽略参数与锚点匹配时，同路径新链接保留原标签页并更新完整网址；`ruoye.site` 加入例外后，重复链接每次新开；分别关闭网页接管和全部复用时，重复链接也每次新开。关闭全部复用时弹窗显示“已连接 · 网页链接接管已暂停”，恢复后重新复用原标签页。配置通过 `defaults` 临时切换，真实 Chrome 网页点击验证；原设置及各键是否显式保存均已恢复，测试页面已清理。具体依据见[发布清单](release-checklist.md)。
+
 正式 Item ID：`iineonbhdnmadlkkmdcofakekmjpnkmn`。公钥保存于 [chrome-extension-public-key.pem](chrome-extension-public-key.pem)，已通过 `openssl pkey -pubin -noout` 校验。
 
 本地测试副本位于 `/Users/sigma/Documents/github/chrome-tab-router/build/ChromeExtension-store-id/`，仅其 `manifest.json` 加入公钥 `key`。该目录在 Git 忽略范围内。公钥来自商店 Package 页；PEM 头尾与换行已移除，处理方式见 [Chrome 官方 manifest.key 说明](https://developer.chrome.com/docs/extensions/reference/manifest/key)。

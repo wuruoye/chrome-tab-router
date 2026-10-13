@@ -48,7 +48,11 @@
 ## 提审前验证与账户事项
 
 - [x] 2026-10-13 用户加载正式 ID 测试副本后，真实 Chrome 弹窗的实际 URL 为 `chrome-extension://iineonbhdnmadlkkmdcofakekmjpnkmn/popup.html`，显示“已连接 · 网页链接接管已开启”；Mac 应用的 `chromeExtensionLastContactID` 同时记录该正式 ID。按用户当前设置测试：首次新增标签页 `1803923998`，再次普通、Command 和中键点击均保留该标签页，总数保持 7；不同路径只新增 `1803924002`，总数为 8。两张验证截图保存在本地 `build/official-id-reuse-verification-1.3.0.jpg` 与 `build/official-id-other-path-verification-1.3.0.jpg`，测试结束仅清理本次创建的三个标签页。
-- [ ] 在开启忽略参数及锚点匹配后，实测 1.3.0 的同路径参数更新；继续核对例外域名、暂停功能及本机应用不可用时的行为。
+- [x] 2026-10-13 使用正式 ID 1.3.0，在真实 Chrome 中验证同路径参数与锚点更新：临时开启忽略所有查询参数、忽略锚点、新链接更新和刷新后，`reuse.html?id=1#first` 更新为 `reuse.html?id=2#second`，保留标签页 `1803924033`，总数保持 10；Mac 操作日志记录 `reused-updated`。截图保存在本地 `build/official-id-parameter-update-verification-1.3.0.jpg`。
+- [x] 2026-10-13 临时将 `ruoye.site` 加入共享配置的例外网站，在真实 Chrome 中连续两次点击同一链接，均各新开一页，原页保留，总数依次为 10、11、12。
+- [x] 2026-10-13 分别关闭 `interceptBrowserLinks` 与 `enabled`，在真实 Chrome 中重复点击同一链接，均每次新开一页；关闭 `enabled` 时，正式 ID 弹窗显示“已连接 · 网页链接接管已暂停”。恢复后再次点击复用原标签页，数量不增加，Mac 日志记录 `reused`。
+- [x] 本次通过 `defaults` 临时修改应用与扩展共用的 UserDefaults，再通过真实网页点击核对行为；菜单栏应用的界面读取超时，未覆盖菜单控件操作。测试结束已恢复七个修改项的原值与是否显式保存，当前忽略查询参数关闭、忽略锚点与跟踪参数开启、复用时刷新关闭、复用与网页接管开启，例外网站为空。测试页面已清理。
+- [ ] 核对本机应用不可用时的行为。
 - [ ] 提审前核对菜单栏操作、产品用途与数据处理说明，确认商店、隐私政策和产品界面一致。
 - [x] 按用户明确授权，在开发者账户中提供公开联系邮箱。
 - [x] 2026-10-13 通过 Google 验证邮件完成确认，后台显示“您的联系电子邮件地址现已通过验证。”。
