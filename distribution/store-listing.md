@@ -1,10 +1,10 @@
 # Chrome Web Store 商店填写材料
 
-准备版本：1.3.0。核对日期：2026-10-13。1.3.0 预览版安装包及公开页面已完成发布核验；主线程上传原 1.3.0 ZIP 后，在同一商店草稿的 Package 页面明确核对到版本 1.3.0、`nativeMessaging` 与主机权限范围。商品详细说明为 1376 字，主线程已确认最终保存进度结束。以下各字段及测试短版与草稿材料保持一致，先不提交审核。
+准备版本：1.3.0。核对日期：2026-10-13。1.3.0 预览版安装包及公开页面已完成发布核验；同一商店草稿的 Package 页面已核对版本 1.3.0、`nativeMessaging` 与主机权限范围。商品详细说明为 1362 字，官网与隐私政策地址使用 Ruoye 服务器页面。商品详情已显示“已成功保存内容。”，先不提交审核。
 
-Mac 1.3.0 已构建安装，严格签名检查、本机协议读取共享设置及允许来源配置已通过。主线程已在真实 Chrome 工具栏打开开发版扩展 `epmhbckoikdfejlaelgbihlbmhplopld` 的 1.3.0 弹窗，核对“已连接 · 网页链接接管已开启”及与 Mac 一致的共享设置。用户已确认说明、首页和支持网址在前台显示正常。菜单栏、开发版扩展弹窗和安装说明三张截图已上传保存，并核对留存与排序。正式商店 ID 实际加载、1.3.0 网页点击实测和联系邮箱属于提审前事项，尚未提交审核。
+Mac 1.3.0 已构建安装，严格签名检查、本机协议读取共享设置及允许来源配置已通过。真实 Chrome 工具栏中的开发版扩展 `epmhbckoikdfejlaelgbihlbmhplopld` 显示“已连接 · 网页链接接管已开启”。已实测同完整网址的普通、Command 和中键点击复用，以及不同路径新开。联系邮箱已通过 Google 验证。提亮后的菜单、新排版开发版弹窗与安装说明三张截图已上传保存。正式商店 ID 的实际连接仍待验证，尚未提交审核。
 
-Privacy 表单已于 2026-10-13 填写并保存：单一用途、`nativeMessaging` 理由、主机访问范围理由、隐私政策网址、不使用远程代码、数据类别“网络记录”和“网站内容”，以及三项 Limited Use 披露；主线程看到“已成功保存内容。”。商品分类、语言、图标、宣传图和三张截图已保存，Test instructions 已保存 444 字短版。Distribution 已只读核对为免费、公开、所有地区，保留原设置。
+Privacy 表单已于 2026-10-13 填写并保存：单一用途、`nativeMessaging` 理由、主机访问范围理由、隐私政策网址、不使用远程代码、数据类别“网络记录”和“网站内容”，以及三项 Limited Use 披露；隐私政策网址已更新为官网页面。商品分类、语言、图标、宣传图和三张截图已保存，Test instructions 已保存 437 字短版，并显示“已保存测试说明”。Distribution 已只读核对为免费、公开、所有地区，保留原设置。
 
 ## 产品信息
 
@@ -14,8 +14,8 @@ Privacy 表单已于 2026-10-13 填写并保存：单一用途、`nativeMessagin
 - 语言：中文（中国）。发布地区按后台选择。
 - 支持网址：[GitHub Issues](https://github.com/wuruoye/chrome-tab-router/issues)
 - Mac 应用下载地址：[1.3.0 · Apple 芯片](https://github.com/wuruoye/chrome-tab-router/releases/download/v1.3.0/chrome-tab-router-mac-1.3.0-arm64.zip)
-- 安装说明与验证页面：[Chrome Tab Router](https://wuruoye.github.io/chrome-tab-router/)
-- 隐私政策 URL：[隐私政策](https://wuruoye.github.io/chrome-tab-router/privacy.html)
+- 安装说明与验证页面：[Chrome Tab Router](https://ruoye.site/chrome-tab-router/)
+- 隐私政策 URL：[隐私政策](https://ruoye.site/chrome-tab-router/privacy.html)
 - 商店项目：[Chrome Tab Router](https://chromewebstore.google.com/detail/chrome-tab-router/iineonbhdnmadlkkmdcofakekmjpnkmn)。当前仍为草稿，上架后该链接可用于安装。
 - Distribution 当前设置：免费、公开、所有地区。尚未提交审核或发布。
 
@@ -33,10 +33,10 @@ Chrome Tab Router 与同名 Mac 应用配合，在用户点击将打开新标签
 https://github.com/wuruoye/chrome-tab-router/releases/download/v1.3.0/chrome-tab-router-mac-1.3.0-arm64.zip
 
 完整安装说明：
-https://wuruoye.github.io/chrome-tab-router/
+https://ruoye.site/chrome-tab-router/
 
 隐私政策：
-https://wuruoye.github.io/chrome-tab-router/privacy.html
+https://ruoye.site/chrome-tab-router/privacy.html
 
 网页脚本仅在支持扩展脚本的 HTTP/HTTPS 页面中工作。Chrome 内部页面、Chrome Web Store、地址栏、书签、右键菜单、表单、脚本调用 window.open() 和普通当前页跳转不在网页点击接管范围内。
 
@@ -58,13 +58,13 @@ https://wuruoye.github.io/chrome-tab-router/privacy.html
 
 ## Test instructions 短版
 
-后台上限为 500 字。以下 444 字正文已由主线程实际保存，并看到“已保存测试说明”；复制时保留五行换行。
+后台上限为 500 字。以下 437 字正文已实际保存，并显示“已保存测试说明”；复制时保留五行换行。
 
 ```text
 无需账号或付费。需要 Apple 芯片 Mac、macOS 13+ 和 Google Chrome。
 App 下载：https://github.com/wuruoye/chrome-tab-router/releases/download/v1.3.0/chrome-tab-router-mac-1.3.0-arm64.zip
 解压到 ~/Applications 并首次打开。预览包为临时签名，未 Apple 公证；如系统阻止，按“隐私与安全性”提示确认打开。首次路由时允许 App 控制 Chrome。
-安装本次审核扩展，弹窗确认“已连接”。完整安装和测试步骤：https://wuruoye.github.io/chrome-tab-router/
+安装本次审核扩展，弹窗确认“已连接”。完整安装和测试步骤：https://ruoye.site/chrome-tab-router/
 菜单开启复用、网页接管、新链接更新、刷新，并忽略所有查询参数与锚点。验证页依次点击三个链接：第一个新开；第二个复用原页并更新参数，标签页数不增加；第三个新开。Command/中键点击也复用。关闭接管或将该域名加入例外后正常新开。
 ```
 
@@ -75,16 +75,16 @@ App 下载：https://github.com/wuruoye/chrome-tab-router/releases/download/v1.3
 1. 下载 Mac 应用： https://github.com/wuruoye/chrome-tab-router/releases/download/v1.3.0/chrome-tab-router-mac-1.3.0-arm64.zip 。解压后将 Chrome Tab Router.app 放入 ~/Applications 并打开。安装包使用临时签名，尚未经过 Apple 公证；macOS 如阻止首次打开，请按“系统设置 → 隐私与安全性”中的系统提示确认打开。
 2. 安装本次审核的扩展。Mac 应用会登记正式扩展 ID；扩展自动检测本机连接。点击扩展图标确认“已连接”。如先安装扩展、后安装 App，请首次打开 App 后在扩展中点击“重新检测”。如仍未连接，先从 Mac 菜单栏“Chrome 扩展”中选择“修复自动连接”，再检测；必要时在扩展弹窗点击“修复连接”，允许打开 Mac 应用，然后重新打开弹窗确认。
 3. 点击 Mac 菜单栏图标，确认“启用标签页复用”“接管 Chrome 网页的新标签页链接”“在所有 Chrome 窗口中查找”“切换到已有标签页后刷新”“复用时更新为新链接”均开启。在“网址匹配”中开启“忽略所有查询参数”和“忽略页面锚点”。例外网站列表保持为空。
-4. 在 Chrome 打开 https://wuruoye.github.io/chrome-tab-router/ 并到“验证标签页复用”部分。点击第一个链接，打开 https://wuruoye.github.io/chrome-tab-router/demo/reuse.html?id=1#first 。首次处理时，如 macOS 请求自动化权限，允许 Mac 应用控制 Google Chrome；如已拒绝，可从菜单栏打开 Chrome 自动化权限设置。示例页显示自身完整地址、参数和锚点。
-5. 回到验证页面，点击第二个链接。它使用 target=_blank，指向 https://wuruoye.github.io/chrome-tab-router/demo/reuse.html?id=2#second 。预期：复用第 4 步的标签页，网址及页面中的地址展示更新为第 5 步的完整链接，并载入页面；标签页总数不增加。
-6. 回到验证页面，点击第三个链接，指向 https://wuruoye.github.io/chrome-tab-router/demo/other.html?id=3 。确保没有该 other.html 路径的其他标签页。预期：新增一个 Chrome 标签页；页面显示不同路径。
+4. 在 Chrome 打开 https://ruoye.site/chrome-tab-router/ 并到“验证标签页复用”部分。点击第一个链接，打开 https://ruoye.site/chrome-tab-router/demo/reuse.html?id=1#first 。首次处理时，如 macOS 请求自动化权限，允许 Mac 应用控制 Google Chrome；如已拒绝，可从菜单栏打开 Chrome 自动化权限设置。示例页显示自身完整地址、参数和锚点。
+5. 回到验证页面，点击第二个链接。它使用 target=_blank，指向 https://ruoye.site/chrome-tab-router/demo/reuse.html?id=2#second 。预期：复用第 4 步的标签页，网址及页面中的地址展示更新为第 5 步的完整链接，并载入页面；标签页总数不增加。
+6. 回到验证页面，点击第三个链接，指向 https://ruoye.site/chrome-tab-router/demo/other.html?id=3 。确保没有该 other.html 路径的其他标签页。预期：新增一个 Chrome 标签页；页面显示不同路径。
 7. 在验证页面对第二个链接使用 Command 点击和鼠标中键点击，预期仍复用 reuse.html 的标签页。网页脚本不支持 Chrome Web Store 和 Chrome 内部页面，请在上述公开验证页面测试。
-8. 在菜单栏关闭网页链接接管，再点击验证页面的新标签页链接，预期由 Chrome 正常新开。在“例外网站”中添加 wuruoye.github.io 后，发往该域名及其子域名的链接也正常新开；测试完成后可在同一子菜单中移除。
+8. 在菜单栏关闭网页链接接管，再点击验证页面的新标签页链接，预期由 Chrome 正常新开。在“例外网站”中添加 ruoye.site 后，发往该域名及其子域名的链接也正常新开；测试完成后可在同一子菜单中移除。
 9. 如需验证外部应用打开链接，在菜单栏“默认浏览器”中选择“设为默认浏览器”，确认系统提示后，从其他应用打开上述链接。HTTP/HTTPS 链接会由 Mac 应用匹配已有标签页；可使用“恢复原来的默认浏览器”恢复。
 
 支持： https://github.com/wuruoye/chrome-tab-router/issues
 
-隐私政策： https://wuruoye.github.io/chrome-tab-router/privacy.html
+隐私政策： https://ruoye.site/chrome-tab-router/privacy.html
 
 ## 图片材料
 
@@ -98,7 +98,7 @@ App 下载：https://github.com/wuruoye/chrome-tab-router/releases/download/v1.3
 | `assets/mac-menu-1.3.0.jpg` | 548×854 | 真实 Mac 主菜单原图，用于生成排版截图。 |
 | `assets/extension-popup-1.3.0.jpg` | 728×640 | 真实开发版扩展连接弹窗原图，用于生成排版截图。 |
 
-两份界面截图从真实原图生成，排版页为 [mac-menu.html](screenshots/mac-menu.html) 和 [extension-popup.html](screenshots/extension-popup.html)，最终 JPEG 已核对为 1280×800。Package、Privacy、商品材料和测试短版已完成草稿填写与保存，Distribution 原有设置已核对。正式商店 ID 的实际加载与自动连接、1.3.0 网页点击实测、联系邮箱提供与验证属于提审前事项。公钥见 [chrome-extension-public-key.pem](chrome-extension-public-key.pem)，正式 ID 测试见 [official-id-testing.md](official-id-testing.md)，素材说明见 [assets/README.md](assets/README.md)。
+两份界面图从真实原图生成，菜单背景已提亮，文字和设置保留，弹窗原图未修改；排版页为 [mac-menu.html](screenshots/mac-menu.html) 和 [extension-popup.html](screenshots/extension-popup.html)，最终 JPEG 为 1280×800。官网已上线，联系邮箱已验证，真实 Chrome 已完成同完整网址复用和不同路径新开的验证。正式商店 ID 的实际连接、参数与锚点更新及例外、暂停行为仍待提审前核对。公钥见 [chrome-extension-public-key.pem](chrome-extension-public-key.pem)，正式 ID 测试见 [official-id-testing.md](official-id-testing.md)，素材说明见 [assets/README.md](assets/README.md)。
 
 ## 参考资料
 

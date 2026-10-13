@@ -37,8 +37,9 @@
 
 - [Mac 应用 · Apple 芯片](https://github.com/wuruoye/chrome-tab-router/releases/download/v1.3.0/chrome-tab-router-mac-1.3.0-arm64.zip)
 - [Chrome 扩展 ZIP](https://github.com/wuruoye/chrome-tab-router/releases/download/v1.3.0/chrome-tab-router-extension-1.3.0.zip)
-- [安装说明与验证页面](https://wuruoye.github.io/chrome-tab-router/)
-- [隐私政策](https://wuruoye.github.io/chrome-tab-router/privacy.html)
+- [官方网站与安装验证](https://ruoye.site/chrome-tab-router/)
+- [隐私政策](https://ruoye.site/chrome-tab-router/privacy.html)
+- [GitHub Pages 镜像](https://wuruoye.github.io/chrome-tab-router/)
 - [联系与支持](https://github.com/wuruoye/chrome-tab-router/issues)
 
 Mac 安装包支持 Apple 芯片和 macOS 13 或更新版本。下载后解压，将 `Chrome Tab Router.app` 放入 `~/Applications` 并打开。安装包使用临时签名，尚未经过 Apple 公证；macOS 如阻止首次打开，可按 [Apple 的说明](https://support.apple.com/guide/mac-help/open-a-mac-app-from-an-unknown-developer-mh40616/mac)在“系统设置 → 隐私与安全性”中确认打开。菜单栏“默认浏览器”中提供“设为默认浏览器”操作。首次路由链接时，允许应用控制 Google Chrome。
@@ -80,7 +81,7 @@ zsh scripts/install.sh
 
 只在支持扩展脚本的 HTTP/HTTPS 网页中运行；Chrome 内部页面和 Chrome Web Store 等受保护页面不支持。Mac 应用连接不可用时，扩展保留 Chrome 原有行为或尝试直接新开目标链接。
 
-正式发布准备见 [发布清单](distribution/release-checklist.md)、[商店填写材料](distribution/store-listing.md)和[隐私政策正文](distribution/privacy-policy.md)。运行 `sh scripts/package-extension.sh` 可生成 ZIP；主线程已于 2026-10-13 在原商店草稿的 Package 页面核对版本 1.3.0 及权限。Privacy、444 字测试说明、商品分类与语言、图标、宣传图和三张截图已保存；截图排序为菜单栏、开发版扩展连接弹窗、安装说明，返回商品详情后已确认留存。Distribution 原有设置为免费、公开、所有地区。公钥和正式 ID 测试材料已准备，正式商店 ID 的实际加载、1.3.0 网页复用实测、联系邮箱提供与验证属于提审前事项，尚未提交审核。
+正式发布准备见 [发布清单](distribution/release-checklist.md)、[商店填写材料](distribution/store-listing.md)和[隐私政策正文](distribution/privacy-policy.md)。运行 `sh scripts/package-extension.sh` 可生成 ZIP。2026-10-13 已核对商店草稿版本 1.3.0 及权限，商品说明、分类、语言、图标、宣传图和三张截图已保存；菜单图片已提亮，截图顺序为菜单栏、开发版扩展连接弹窗、安装说明。官网已部署到 Ruoye 服务器，联系邮箱已验证。真实 Chrome 已验证同完整网址的普通、Command 和中键点击复用，以及不同路径新开。正式商店 ID 的实际连接、参数与锚点更新、例外网站及暂停行为仍需提审前核对。尚未提交审核。
 
 ## 恢复与卸载
 
