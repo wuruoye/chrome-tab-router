@@ -18,9 +18,10 @@
 
 ## 下载与公开页面部署
 
-- [ ] 发布 GitHub Release `v1.3.0` 并核验 [Mac 安装包](https://github.com/wuruoye/chrome-tab-router/releases/download/v1.3.0/chrome-tab-router-mac-1.3.0-arm64.zip)可直接下载，内容为 Apple 芯片版 1.3.0 应用。扩展核心功能依赖本机应用，审核人员需要能安装并使用。当前安装包尚未经过 Apple 公证，安装说明已披露。
-- [ ] 发布并核验 [扩展 ZIP](https://github.com/wuruoye/chrome-tab-router/releases/download/v1.3.0/chrome-tab-router-extension-1.3.0.zip)可直接下载，用于商店上架前的本地安装与测试。
-- [ ] 从仓库 `docs/` 启用 GitHub Pages，核验 [安装说明与验证页面](https://wuruoye.github.io/chrome-tab-router/)及[隐私政策](https://wuruoye.github.io/chrome-tab-router/privacy.html)在未登录状态下可公开读取。确认安装步骤、自动连接行为和最终安装包一致，再更新文档中的待核验状态。
+- [x] [GitHub Release v1.3.0](https://github.com/wuruoye/chrome-tab-router/releases/tag/v1.3.0)已公开发布为预览版。2026-10-13 核验 [Mac 安装包](https://github.com/wuruoye/chrome-tab-router/releases/download/v1.3.0/chrome-tab-router-mac-1.3.0-arm64.zip)下载跳转后返回 HTTP 200，内容为 Apple 芯片版 1.3.0 应用。扩展核心功能依赖本机应用，审核人员需要能安装并使用。安装包使用临时签名，尚未经过 Apple 公证，安装说明已披露。
+- [x] [扩展 ZIP](https://github.com/wuruoye/chrome-tab-router/releases/download/v1.3.0/chrome-tab-router-extension-1.3.0.zip)已随 1.3.0 预览版发布，2026-10-13 核对 Release 资产存在，用于商店上架前的本地安装与测试。
+- [x] GitHub Pages 已使用 `main:/docs` 部署，2026-10-13 核验最新构建状态为 `built`，[安装说明与验证页面](https://wuruoye.github.io/chrome-tab-router/)已部署，[隐私政策](https://wuruoye.github.io/chrome-tab-router/privacy.html)返回 HTTP 200，均为公开页面。
+- [ ] 推送并核验本项目自有的 [同路径示例](https://wuruoye.github.io/chrome-tab-router/demo/reuse.html?id=1#first)和[不同路径示例](https://wuruoye.github.io/chrome-tab-router/demo/other.html?id=3)可访问。页面仅展示自身完整地址、参数和锚点，无后台请求或追踪；用于更新参数、复用标签页及不同路径新开页面的审核演示和截图。
 
 ## 开发者账户与草稿
 

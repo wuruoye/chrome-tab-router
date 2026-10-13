@@ -29,11 +29,11 @@
 
 添加例外网站时，在菜单栏“例外网站”子菜单中选择添加操作，并在弹出的输入框中填写域名。
 
-例如启用“忽略所有查询参数”和“复用时更新为新链接”后，已有 `https://example.com/page?id=1`，再打开 `https://example.com/page?id=2`，会保留原标签页并载入 `id=2` 的页面。参数变化产生一次导航加载；仅锚点变化时，按刷新开关决定是否重新载入。关闭“复用时更新为新链接”后，匹配到的标签页保留原地址。
+例如启用“忽略所有查询参数”“忽略页面锚点”和“复用时更新为新链接”后，先打开[本项目同路径示例 id=1](https://wuruoye.github.io/chrome-tab-router/demo/reuse.html?id=1#first)，再打开[同路径示例 id=2](https://wuruoye.github.io/chrome-tab-router/demo/reuse.html?id=2#second)，会保留原标签页并载入 `id=2` 的页面。参数变化产生一次导航加载；仅锚点变化时，按刷新开关决定是否重新载入。关闭“复用时更新为新链接”后，匹配到的标签页保留原地址。
 
 ## 下载与安装
 
-1.3.0 的安装包和公开页面正在准备，以下下载与 Pages 链接仍待发布核验。
+[1.3.0 预览版](https://github.com/wuruoye/chrome-tab-router/releases/tag/v1.3.0)已公开发布，以下安装包和 Pages 页面已于 2026-10-13 完成发布核验。
 
 - [Mac 应用 · Apple 芯片](https://github.com/wuruoye/chrome-tab-router/releases/download/v1.3.0/chrome-tab-router-mac-1.3.0-arm64.zip)
 - [Chrome 扩展 ZIP](https://github.com/wuruoye/chrome-tab-router/releases/download/v1.3.0/chrome-tab-router-extension-1.3.0.zip)
@@ -41,7 +41,7 @@
 - [隐私政策](https://wuruoye.github.io/chrome-tab-router/privacy.html)
 - [联系与支持](https://github.com/wuruoye/chrome-tab-router/issues)
 
-Mac 安装包支持 Apple 芯片和 macOS 13 或更新版本。下载后解压，将 `Chrome Tab Router.app` 放入 `~/Applications` 并打开。当前安装包尚未经过 Apple 公证；macOS 如阻止首次打开，可按 [Apple 的说明](https://support.apple.com/guide/mac-help/open-a-mac-app-from-an-unknown-developer-mh40616/mac)在“系统设置 → 隐私与安全性”中确认打开。菜单栏“默认浏览器”中提供“设为默认浏览器”操作。首次路由链接时，允许应用控制 Google Chrome。
+Mac 安装包支持 Apple 芯片和 macOS 13 或更新版本。下载后解压，将 `Chrome Tab Router.app` 放入 `~/Applications` 并打开。安装包使用临时签名，尚未经过 Apple 公证；macOS 如阻止首次打开，可按 [Apple 的说明](https://support.apple.com/guide/mac-help/open-a-mac-app-from-an-unknown-developer-mh40616/mac)在“系统设置 → 隐私与安全性”中确认打开。菜单栏“默认浏览器”中提供“设为默认浏览器”操作。首次路由链接时，允许应用控制 Google Chrome。
 
 ## 从源码编译
 

@@ -1,6 +1,6 @@
 # Chrome Web Store 商店填写材料
 
-准备版本：1.3.0。核对日期：2026-10-13。以下各字段正文可直接复制到商店草稿。外部下载和隐私页面部署仍待核验，核验完成前不提交审核；当前商店草稿包为 1.2.0，仍需上传最终 1.3.0 ZIP。
+准备版本：1.3.0。核对日期：2026-10-13。以下各字段正文可直接复制到商店草稿。1.3.0 预览版安装包及公开页面已完成发布核验；当前商店草稿包为 1.2.0，仍需上传最终 1.3.0 ZIP，先不提交审核。
 
 ## 产品信息
 
@@ -55,14 +55,14 @@ https://wuruoye.github.io/chrome-tab-router/privacy.html
 
 本扩展需要本机 Chrome Tab Router Mac 应用。无需账号、密码或付费。请使用 Apple 芯片 Mac、macOS 13 或更新版本，以及 Google Chrome。
 
-1. 下载 Mac 应用： https://github.com/wuruoye/chrome-tab-router/releases/download/v1.3.0/chrome-tab-router-mac-1.3.0-arm64.zip 。解压后将 Chrome Tab Router.app 放入 ~/Applications 并打开。当前安装包尚未经过 Apple 公证；macOS 如阻止首次打开，请按“系统设置 → 隐私与安全性”中的系统提示确认打开。
+1. 下载 Mac 应用： https://github.com/wuruoye/chrome-tab-router/releases/download/v1.3.0/chrome-tab-router-mac-1.3.0-arm64.zip 。解压后将 Chrome Tab Router.app 放入 ~/Applications 并打开。安装包使用临时签名，尚未经过 Apple 公证；macOS 如阻止首次打开，请按“系统设置 → 隐私与安全性”中的系统提示确认打开。
 2. 安装本次审核的扩展。Mac 应用会登记正式扩展 ID；扩展自动检测本机连接。点击扩展图标确认“已连接”。如先安装扩展、后安装 App，请首次打开 App 后在扩展中点击“重新检测”。如仍未连接，先从 Mac 菜单栏“Chrome 扩展”中选择“修复自动连接”，再检测；必要时在扩展弹窗点击“修复连接”，允许打开 Mac 应用，然后重新打开弹窗确认。
 3. 点击 Mac 菜单栏图标，确认“启用标签页复用”“接管 Chrome 网页的新标签页链接”“在所有 Chrome 窗口中查找”“切换到已有标签页后刷新”“复用时更新为新链接”均开启。在“网址匹配”中开启“忽略所有查询参数”和“忽略页面锚点”。例外网站列表保持为空。
-4. 在 Chrome 打开 https://wuruoye.github.io/chrome-tab-router/ 并到“验证标签页复用”部分。点击第一个链接，打开 https://example.com/?tab_router_demo=1#first 。首次处理时，如 macOS 请求自动化权限，允许 Mac 应用控制 Google Chrome；如已拒绝，可从菜单栏打开 Chrome 自动化权限设置。
-5. 回到验证页面，点击第二个链接。它使用 target=_blank，指向 https://example.com/?tab_router_demo=2#second 。预期：复用第 4 步的标签页，网址更新为第 5 步的完整链接，并载入页面；标签页总数不增加。
-6. 回到验证页面，点击第三个链接，指向 https://example.org/?tab_router_demo=3 。确保没有 example.org 的其他标签页。预期：新增一个 Chrome 标签页。
-7. 在验证页面对第二个链接使用 Command 点击和鼠标中键点击，预期仍复用 example.com 的标签页。网页脚本不支持 Chrome Web Store 和 Chrome 内部页面，请在上述公开验证页面测试。
-8. 在菜单栏关闭网页链接接管，再点击验证页面的新标签页链接，预期由 Chrome 正常新开。在“例外网站”中添加 example.com 后，发往该域名及其子域名的链接也正常新开；测试完成后可在同一子菜单中移除。
+4. 在 Chrome 打开 https://wuruoye.github.io/chrome-tab-router/ 并到“验证标签页复用”部分。点击第一个链接，打开 https://wuruoye.github.io/chrome-tab-router/demo/reuse.html?id=1#first 。首次处理时，如 macOS 请求自动化权限，允许 Mac 应用控制 Google Chrome；如已拒绝，可从菜单栏打开 Chrome 自动化权限设置。示例页显示自身完整地址、参数和锚点。
+5. 回到验证页面，点击第二个链接。它使用 target=_blank，指向 https://wuruoye.github.io/chrome-tab-router/demo/reuse.html?id=2#second 。预期：复用第 4 步的标签页，网址及页面中的地址展示更新为第 5 步的完整链接，并载入页面；标签页总数不增加。
+6. 回到验证页面，点击第三个链接，指向 https://wuruoye.github.io/chrome-tab-router/demo/other.html?id=3 。确保没有该 other.html 路径的其他标签页。预期：新增一个 Chrome 标签页；页面显示不同路径。
+7. 在验证页面对第二个链接使用 Command 点击和鼠标中键点击，预期仍复用 reuse.html 的标签页。网页脚本不支持 Chrome Web Store 和 Chrome 内部页面，请在上述公开验证页面测试。
+8. 在菜单栏关闭网页链接接管，再点击验证页面的新标签页链接，预期由 Chrome 正常新开。在“例外网站”中添加 wuruoye.github.io 后，发往该域名及其子域名的链接也正常新开；测试完成后可在同一子菜单中移除。
 9. 如需验证外部应用打开链接，在菜单栏“默认浏览器”中选择“设为默认浏览器”，确认系统提示后，从其他应用打开上述链接。HTTP/HTTPS 链接会由 Mac 应用匹配已有标签页；可使用“恢复原来的默认浏览器”恢复。
 
 支持： https://github.com/wuruoye/chrome-tab-router/issues

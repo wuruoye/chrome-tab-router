@@ -51,12 +51,12 @@
       <a class="button" href="https://github.com/wuruoye/chrome-tab-router/releases/download/v1.3.0/chrome-tab-router-mac-1.3.0-arm64.zip">下载 Mac 应用 · Apple 芯片</a>
       <a class="button secondary" href="#install">安装说明</a>
     </div>
-    <p class="muted">版本 1.3.0 · macOS 13 或更新版本 · Google Chrome。下载链接发布核验中。</p>
+    <p class="muted">1.3.0 预览版 · macOS 13 或更新版本 · Google Chrome。</p>
 
     <section id="install">
       <h2>安装与连接</h2>
       <ol>
-        <li>下载并解压 Mac 应用，将 <code>Chrome Tab Router.app</code> 放入 <code>~/Applications</code>，然后打开。当前安装包尚未经过 Apple 公证；macOS 如阻止首次打开，可按照 <a href="https://support.apple.com/guide/mac-help/open-a-mac-app-from-an-unknown-developer-mh40616/mac">Apple 的说明</a>在“系统设置 → 隐私与安全性”中确认打开。</li>
+        <li>下载并解压 Mac 应用，将 <code>Chrome Tab Router.app</code> 放入 <code>~/Applications</code>，然后打开。安装包使用临时签名，尚未经过 Apple 公证；macOS 如阻止首次打开，可按照 <a href="https://support.apple.com/guide/mac-help/open-a-mac-app-from-an-unknown-developer-mh40616/mac">Apple 的说明</a>在“系统设置 → 隐私与安全性”中确认打开。</li>
         <li>点击菜单栏中的应用图标。在“默认浏览器”中选择“设为默认浏览器”，即可接收外部应用打开的 HTTP/HTTPS 链接；Chrome 网页内部的新标签页链接还需要安装配套扩展。</li>
         <li>扩展当前仍为商店草稿。测试时从 Mac 菜单栏“Chrome 扩展”中打开自带的扩展目录，在 Chrome 的 <code>chrome://extensions/</code> 开启开发者模式，选择“加载已解压的扩展程序”并选择该目录。也可使用 <a href="https://github.com/wuruoye/chrome-tab-router/releases/download/v1.3.0/chrome-tab-router-extension-1.3.0.zip">扩展 ZIP</a>，解压后选择包含 <code>manifest.json</code> 的文件夹。</li>
         <li>正式扩展的本机连接由 Mac 应用每次启动时自动登记，扩展会在安装、Chrome 启动和打开弹窗时检测连接。先安装扩展、再安装 App 时，首次打开 App 后返回扩展弹窗或欢迎页，点击“重新检测”。本地开发版首次使用或修复连接时，在扩展弹窗点击“修复连接”，允许打开应用并确认连接请求，然后重新检测确认“已连接”。首次路由链接时，允许 Mac 应用控制 Google Chrome。</li>
@@ -82,21 +82,21 @@
       <div class="cards">
         <article class="card">
           <h3>1. 打开基准页面</h3>
-          <p>打开 example.com 的第一个地址。它将作为可复用的标签页。</p>
-          <a class="button" href="https://example.com/?tab_router_demo=1#first" target="_blank" rel="noopener">打开第一个链接</a>
+          <p>打开本项目的同路径示例，观察 id=1 与 first 锚点。</p>
+          <a class="button" href="demo/reuse.html?id=1#first" target="_blank" rel="noopener">打开第一个链接</a>
         </article>
         <article class="card">
           <h3>2. 更新原标签页</h3>
           <p>返回本页，再点击此链接。预期切回原标签页并更新参数，标签页总数保持不变。</p>
-          <a class="button" href="https://example.com/?tab_router_demo=2#second" target="_blank" rel="noopener">打开第二个链接</a>
+          <a class="button" href="demo/reuse.html?id=2#second" target="_blank" rel="noopener">打开第二个链接</a>
         </article>
         <article class="card">
           <h3>3. 打开不同网址</h3>
-          <p>确保没有 example.org 的标签页。点击后预期新开一个标签页。</p>
-          <a class="button" href="https://example.org/?tab_router_demo=3" target="_blank" rel="noopener">打开第三个链接</a>
+          <p>确保尚未打开 other.html 示例。点击后预期新开一个标签页。</p>
+          <a class="button" href="demo/other.html?id=3" target="_blank" rel="noopener">打开第三个链接</a>
         </article>
       </div>
-      <p class="muted">对第二个链接使用 Command 点击或鼠标中键，也可验证复用。关闭网页链接接管，或把 example.com 加入例外网站后，发往该域名的链接会由 Chrome 正常新开。</p>
+      <p class="muted">对第二个链接使用 Command 点击或鼠标中键，也可验证复用。关闭网页链接接管，或把 wuruoye.github.io 加入例外网站后，这些链接会由 Chrome 正常新开。示例页只显示自身地址、参数和锚点。</p>
     </section>
 
     <footer>由 <a href="https://github.com/wuruoye">wuruoye</a> 维护。浏览网址只在用户设备上处理，详情见 <a href="privacy.html">隐私政策</a>。问题反馈：<a href="https://github.com/wuruoye/chrome-tab-router/issues">GitHub Issues</a>。</footer>

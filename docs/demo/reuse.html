@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Chrome Tab Router 自有示例：同一路径的参数和锚点变化可复用原标签页。">
+  <title>同路径链接 · Chrome Tab Router</title>
+  <style>
+    :root { color-scheme: light; --ink: #203550; --muted: #66717d; --line: #e3e5e7; --paper: #faf9f6; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.75 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    main { width: min(100% - 48px, 1024px); margin: 0 auto; padding: 40px 0 44px; }
+    nav { display: flex; align-items: center; flex-wrap: wrap; gap: 22px; margin-bottom: 42px; font-size: 14px; }
+    nav strong { margin-right: auto; font-size: 16px; }
+    a { color: #294e78; text-underline-offset: 3px; }
+    a:hover { color: #b94436; }
+    .eyebrow { color: #b94436; font-size: 14px; font-weight: 650; margin: 0 0 12px; }
+    h1 { font-size: clamp(30px, 4vw, 44px); line-height: 1.25; letter-spacing: -.025em; margin: 0 0 14px; }
+    .lead { color: #536173; font-size: 18px; margin: 0 0 28px; }
+    .address { background: #fff; border: 1px solid var(--line); border-left: 4px solid #d15b47; border-radius: 12px; padding: 20px 24px; }
+    .label { display: block; color: var(--muted); font-size: 13px; margin-bottom: 8px; }
+    .value { font: 17px/1.65 ui-monospace, SFMono-Regular, Menlo, monospace; overflow-wrap: anywhere; }
+    .details { display: grid; grid-template-columns: 1.6fr 1fr 1fr; gap: 14px; margin: 16px 0 24px; }
+    .detail { border: 1px solid var(--line); background: #fff; border-radius: 12px; padding: 18px 20px; }
+    .detail .value { font-size: 16px; }
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 26px 0 22px; }
+    .button { display: inline-block; padding: 11px 18px; border-radius: 9px; color: #fff; background: var(--ink); text-decoration: none; font-weight: 600; font-size: 15px; }
+    .button:hover { color: #fff; background: #355271; }
+    .button.secondary { background: #e9edf1; color: var(--ink); }
+    .instructions { font-size: 15px; color: #536173; margin: 0; }
+    footer { border-top: 1px solid var(--line); padding-top: 18px; margin-top: 28px; color: var(--muted); font-size: 13px; }
+    @media (max-width: 640px) { main { width: min(100% - 32px, 1024px); padding-top: 26px; } nav { margin-bottom: 30px; } nav strong { width: 100%; } .details { grid-template-columns: 1fr; } .value { font-size: 14px; } }
+  </style>
+</head>
+<body>
+  <main>
+    <nav aria-label="示例页面导航">
+      <strong>Chrome Tab Router</strong>
+      <a href="../index.html#verify">安装与验证说明</a>
+      <a href="../privacy.html">隐私政策</a>
+    </nav>
+    <p class="eyebrow">自有示例 · 同路径链接</p>
+    <h1>参数变了，继续使用原标签页。</h1>
+    <p class="lead">此页显示实际收到的地址。两次打开相同路径，只更换查询参数和锚点。</p>
+    <section class="address" aria-label="当前完整网址">
+      <span class="label">当前完整地址</span>
+      <div class="value" id="current-url">正在显示当前地址…</div>
+    </section>
+    <div class="details">
+      <section class="detail" aria-label="路径">
+        <span class="label">路径 · 始终参与匹配</span>
+        <div class="value" id="current-path">demo/reuse.html</div>
+      </section>
+      <section class="detail" aria-label="查询参数">
+        <span class="label">收到的查询参数</span>
+        <div class="value" id="current-query">正在读取…</div>
+      </section>
+      <section class="detail" aria-label="页面锚点">
+        <span class="label">收到的页面锚点</span>
+        <div class="value" id="current-fragment">正在读取…</div>
+      </section>
+    </div>
+    <p class="instructions">在 Mac 菜单栏开启“忽略所有查询参数”“忽略页面锚点”和“复用时更新为新链接”后，下面的同路径链接可复用本页所在标签页，并载入新地址。</p>
+    <div class="actions">
+      <a class="button" href="reuse.html?id=2#second" target="_blank" rel="noopener">打开同路径的新链接</a>
+      <a class="button secondary" href="other.html?id=3" target="_blank" rel="noopener">打开不同路径的链接</a>
+    </div>
+    <footer>本页仅展示当前页面 URL，帮助观察参数与锚点变化。页面没有后台请求、分析或追踪脚本。</footer>
+  </main>
+  <script>
+    function displayCurrentAddress() {
+      document.getElementById("current-url").textContent = window.location.href;
+      document.getElementById("current-path").textContent = window.location.pathname;
+      document.getElementById("current-query").textContent = window.location.search || "无查询参数";
+      document.getElementById("current-fragment").textContent = window.location.hash || "无页面锚点";
+    }
+    displayCurrentAddress();
+    window.addEventListener("hashchange", displayCurrentAddress);
+  </script>
+</body>
+</html>
