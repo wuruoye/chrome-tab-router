@@ -1,0 +1,7 @@
+@chrome_tab_router_root path /chrome-tab-router
+redir @chrome_tab_router_root /chrome-tab-router/ 308
+
+handle_path /chrome-tab-router/* {
+	root * /var/www/chrome-tab-router/current
+	file_server
+}

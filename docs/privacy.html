@@ -4,60 +4,97 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Chrome Tab Router 隐私政策：浏览网址仅在用户设备上处理，用于查找并复用 Chrome 标签页。">
+  <meta name="theme-color" content="#213650">
   <title>隐私政策 · Chrome Tab Router</title>
-  <link rel="canonical" href="https://wuruoye.github.io/chrome-tab-router/privacy.html">
-  <style>
-    :root { color-scheme: light; --ink: #203550; --muted: #66717d; --line: #e3e5e7; --paper: #faf9f6; }
-    * { box-sizing: border-box; }
-    body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.85 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
-    main { width: min(100% - 40px, 820px); margin: 0 auto; padding: 44px 0 64px; }
-    nav { display: flex; flex-wrap: wrap; gap: 20px; font-size: 14px; margin-bottom: 40px; }
-    a { color: #294e78; text-underline-offset: 3px; overflow-wrap: anywhere; }
-    a:hover { color: #b94436; }
-    h1 { font-size: clamp(29px, 5vw, 40px); line-height: 1.25; margin: 0 0 14px; letter-spacing: -.025em; }
-    h2 { font-size: 21px; margin: 34px 0 10px; line-height: 1.4; }
-    p { margin: 0 0 15px; }
-    .meta { color: var(--muted); border-bottom: 1px solid var(--line); padding-bottom: 25px; margin-bottom: 27px; font-size: 14px; }
-    .note { border-left: 3px solid #d15b47; padding: 14px 18px; margin: 26px 0; background: #fff; }
-    code { background: #edf0f3; border-radius: 4px; padding: 2px 5px; font-size: 13px; overflow-wrap: anywhere; }
-    footer { border-top: 1px solid var(--line); margin-top: 38px; padding-top: 20px; color: var(--muted); font-size: 14px; }
-  </style>
+  <link rel="canonical" href="https://ruoye.site/chrome-tab-router/privacy.html">
+  <link rel="icon" type="image/png" href="assets/app-icon.png">
+  <link rel="stylesheet" href="assets/site.css">
 </head>
 <body>
-  <main>
-    <nav aria-label="网站导航">
-      <a href="./">Chrome Tab Router</a>
-      <a href="https://github.com/wuruoye/chrome-tab-router">源代码</a>
-      <a href="https://github.com/wuruoye/chrome-tab-router/issues">联系与支持</a>
-    </nav>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="./" aria-label="Chrome Tab Router 首页">
+        <img src="assets/app-icon.png" alt="" width="128" height="128">
+        <span>Chrome Tab Router</span>
+      </a>
+      <nav class="main-nav" aria-label="主要导航">
+        <a href="index.html#features">功能</a>
+        <a href="index.html#install">安装指南</a>
+        <a href="index.html#verify">验证复用</a>
+        <a href="https://github.com/wuruoye/chrome-tab-router/issues">支持与反馈</a>
+      </nav>
+      <a class="button small" href="index.html#install">开始使用</a>
+    </div>
+  </header>
+
+  <main class="policy-main" id="main">
+    <p class="eyebrow">Chrome Tab Router</p>
     <h1>隐私政策</h1>
-    <p class="meta">适用于 Chrome Tab Router Mac 应用和 Chrome 扩展。<br>开发者：<a href="https://github.com/wuruoye">wuruoye</a> · 生效日期：2026-10-13<br>联系渠道：<a href="https://github.com/wuruoye/chrome-tab-router/issues">GitHub Issues</a></p>
-    <p class="note">目标链接和 Chrome 已有标签页的网址仅在用户设备上处理，用于查找、复用和更新标签页。浏览网址、设置和操作日志不会上传给开发者。</p>
+    <p class="policy-meta">适用于 Chrome Tab Router Mac 应用和 Chrome 扩展。<br>开发者：<a href="https://github.com/wuruoye">wuruoye</a> · 生效日期：2026-10-13<br>联系渠道：<a href="https://github.com/wuruoye/chrome-tab-router/issues">GitHub Issues</a></p>
+    <p class="policy-note">目标链接和 Chrome 已有标签页的网址仅在用户设备上处理，用于查找、复用和更新标签页。浏览网址、设置和操作日志不会上传给开发者。</p>
+    <nav class="policy-toc" aria-label="隐私政策目录">
+      <a href="#processing">功能与处理的数据</a>
+      <a href="#storage">本机存储与保留</a>
+      <a href="#sharing">共享与用途</a>
+      <a href="#permissions">权限</a>
+      <a href="#website">公开页面与支持渠道</a>
+      <a href="#choices">用户选择与政策变化</a>
+      <a href="#limited-use">Limited Use 声明</a>
+    </nav>
 
-    <h2>功能与处理的数据</h2>
-    <p>Chrome Tab Router 扩展与用户安装的同名 Mac 应用配合，在用户点击会打开新标签页的网页链接时查找并复用已打开的 Chrome 标签页。为完成这项功能，扩展读取该次点击的完整目标 URL，并通过 Chrome Native Messaging 发送给本机 Mac 应用。完整 URL 可能包含域名、路径、查询参数和片段，因此可能包含用户放在 URL 中的信息。</p>
-    <p>Mac 应用在用户设备上读取 Chrome 当前打开的标签页 URL，与目标 URL 比较。默认按完整 URL 匹配；用户可在菜单栏设置匹配时忽略页面锚点、常见跟踪参数或所有查询参数。这些设置只改变比较方式，扩展仍会将完整目标 URL 传给本机应用。找到匹配标签页后，应用可按设置将其更新为收到的完整 URL、保留原地址或刷新；没有匹配时会打开新标签页。扩展还会向本机应用读取启用状态、排除域名等设置。Mac 应用在本机登记正式扩展 ID，以及用户主动连接的开发版扩展 ID，用于限制本机消息通道的来源。</p>
-    <p>扩展的网页脚本在 HTTP 和 HTTPS 网页及其框架中运行，用于识别用户触发的新标签页链接。扩展不会为匹配功能读取页面正文、表单内容、密码输入框或 Cookie。Mac 应用还会处理外部应用交给系统打开的 HTTP/HTTPS 链接，或用户通过菜单栏主动打开的剪贴板链接；应用只在用户选择该菜单操作时读取剪贴板。用户可以在菜单栏暂停标签页复用、关闭网页链接接管或管理例外网站。</p>
+    <section id="processing" aria-labelledby="processing-title">
+      <h2 id="processing-title">功能与处理的数据</h2>
+      <p>Chrome Tab Router 扩展与用户安装的同名 Mac 应用配合，在用户点击会打开新标签页的网页链接时查找并复用已打开的 Chrome 标签页。为完成这项功能，扩展读取该次点击的完整目标 URL，并通过 Chrome Native Messaging 发送给本机 Mac 应用。完整 URL 可能包含域名、路径、查询参数和片段，因此可能包含用户放在 URL 中的信息。</p>
+      <p>Mac 应用在用户设备上读取 Chrome 当前打开的标签页 URL，与目标 URL 比较。默认按完整 URL 匹配；用户可在菜单栏设置匹配时忽略页面锚点、常见跟踪参数或所有查询参数。这些设置只改变比较方式，扩展仍会将完整目标 URL 传给本机应用。找到匹配标签页后，应用可按设置将其更新为收到的完整 URL、保留原地址或刷新；没有匹配时会打开新标签页。扩展还会向本机应用读取启用状态、排除域名等设置。Mac 应用在本机登记正式扩展 ID，以及用户主动连接的开发版扩展 ID，用于限制本机消息通道的来源。</p>
+      <p>扩展的网页脚本在 HTTP 和 HTTPS 网页及其框架中运行，用于识别用户触发的新标签页链接。扩展不会为匹配功能读取页面正文、表单内容、密码输入框或 Cookie。Mac 应用还会处理外部应用交给系统打开的 HTTP/HTTPS 链接，或用户通过菜单栏主动打开的剪贴板链接；应用只在用户选择该菜单操作时读取剪贴板。用户可以在菜单栏暂停标签页复用、关闭网页链接接管或管理例外网站。</p>
+    </section>
 
-    <h2>本机存储与保留</h2>
-    <p>目标 URL 和用于比较的现有标签页 URL 由本机程序临时处理，不写入 Chrome Tab Router 的操作日志。Mac 应用在本机保存功能设置、排除域名、连接所需的扩展 ID，以及用于恢复默认浏览器的原应用标识。本机连接状态还保存最近发起通信的扩展 ID 和最近连接时间，用于菜单栏显示最近连接记录；这不表示扩展持续在线。本机操作日志仅记录时间和动作名称。设置、连接文件和操作日志会保留在用户设备上，直到用户主动清理。应用不建立浏览网址历史。</p>
-    <p>卸载前可在菜单栏关闭登录启动并恢复原来的默认浏览器，随后退出应用、删除应用和 Chrome 扩展。需要清理本机数据时，可删除 <code>~/Library/Application Support/Google/Chrome/NativeMessagingHosts/com.sigma.chrome_tab_router.json</code>，运行 <code>defaults delete com.sigma.ChromeTabRouter</code>，并删除 <code>~/Library/Logs/ChromeTabRouter/</code>。这些步骤清理的是本应用的本机设置、连接文件和操作日志。</p>
+    <section id="storage" aria-labelledby="storage-title">
+      <h2 id="storage-title">本机存储与保留</h2>
+      <p>目标 URL 和用于比较的现有标签页 URL 由本机程序临时处理，不写入 Chrome Tab Router 的操作日志。Mac 应用在本机保存功能设置、排除域名、连接所需的扩展 ID，以及用于恢复默认浏览器的原应用标识。本机连接状态还保存最近发起通信的扩展 ID 和最近连接时间，用于菜单栏显示最近连接记录；这不表示扩展持续在线。本机操作日志仅记录时间和动作名称。设置、连接文件和操作日志会保留在用户设备上，直到用户主动清理。应用不建立浏览网址历史。</p>
+      <p>卸载前可在菜单栏关闭登录启动并恢复原来的默认浏览器，随后退出应用、删除应用和 Chrome 扩展。需要清理本机数据时，可删除 <code>~/Library/Application Support/Google/Chrome/NativeMessagingHosts/com.sigma.chrome_tab_router.json</code>，运行 <code>defaults delete com.sigma.ChromeTabRouter</code>，并删除 <code>~/Library/Logs/ChromeTabRouter/</code>。这些步骤清理的是本应用的本机设置、连接文件和操作日志。</p>
+    </section>
 
-    <h2>共享与用途</h2>
-    <p>扩展和 Mac 应用不会把这些 URL、设置或操作日志发送给开发者的服务器，没有分析或广告服务，开发者无法通过本应用远程查看用户的浏览 URL。Chrome 正常打开目标网站时，浏览器与该网站之间的常规网络请求仍会发生；网站自身的数据处理遵循该网站的政策。用户的浏览 URL 不用于广告，不出售给第三方，也不用于与链接复用无关的用途。</p>
+    <section id="sharing" aria-labelledby="sharing-title">
+      <h2 id="sharing-title">共享与用途</h2>
+      <p>扩展和 Mac 应用不会把这些 URL、设置或操作日志发送给开发者的服务器，没有分析或广告服务，开发者无法通过本应用远程查看用户的浏览 URL。Chrome 正常打开目标网站时，浏览器与该网站之间的常规网络请求仍会发生；网站自身的数据处理遵循该网站的政策。用户的浏览 URL 不用于广告，不出售给第三方，也不用于与链接复用无关的用途。</p>
+    </section>
 
-    <h2>权限</h2>
-    <p><code>nativeMessaging</code> 允许扩展与用户设备上的 Mac 应用通信，完成链接路由及设置读取。网页脚本在 HTTP/HTTPS 网页及其框架中运行，才能识别用户请求新标签页的链接；Chrome 内部页面和 Chrome Web Store 等受保护页面不支持这些脚本。Mac 应用需要 macOS 的 Chrome 自动化权限，才能读取并切换已打开的标签页。</p>
+    <section id="permissions" aria-labelledby="permissions-title">
+      <h2 id="permissions-title">权限</h2>
+      <p><code>nativeMessaging</code> 允许扩展与用户设备上的 Mac 应用通信，完成链接路由及设置读取。网页脚本在 HTTP/HTTPS 网页及其框架中运行，才能识别用户请求新标签页的链接；Chrome 内部页面和 Chrome Web Store 等受保护页面不支持这些脚本。Mac 应用需要 macOS 的 Chrome 自动化权限，才能读取并切换已打开的标签页。</p>
+    </section>
 
-    <h2>公开页面与支持渠道</h2>
-    <p>安装说明和本政策由 GitHub Pages 托管，页面没有分析脚本、广告、表单或应用内追踪。访问页面、下载 GitHub Release 安装包，或主动在 GitHub Issues 提交问题时，由 GitHub 提供相应服务，遵循 <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">GitHub 隐私声明</a>。GitHub Issues 中的用户提交内容公开可见。这些页面和支持服务不会从 Chrome Tab Router 读取用户的浏览 URL、设置或操作日志。</p>
+    <section id="website" aria-labelledby="website-title">
+      <h2 id="website-title">公开页面与支持渠道</h2>
+      <p>官网由开发者的服务器提供，GitHub Pages 提供镜像。页面没有分析脚本、广告、表单或应用内追踪；验证页仅在浏览器中显示当前页面的 URL，不请求 App 数据。访问官网时，浏览器会向托管服务器发送提供页面所需的常规网络请求，可能包含 IP 地址、浏览器信息和访问路径。这些请求与 App 为复用标签页而在本机处理的网址分开，官网不会从 App 读取用户的浏览 URL、设置或操作日志。</p>
+      <p>公开仓库、GitHub Pages 镜像、Release 安装包下载和 GitHub Issues 由 GitHub 提供相应服务，遵循 <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">GitHub 隐私声明</a>。GitHub Issues 中的用户提交内容公开可见。这些页面和支持服务不会从 Chrome Tab Router 读取用户的浏览 URL、设置或操作日志。</p>
+    </section>
 
-    <h2>用户选择与政策变化</h2>
-    <p>用户可在菜单栏关闭网页链接接管、暂停标签页复用、管理例外域名，或卸载扩展与应用。若以后改变所处理的数据、用途或接收方，开发者会先更新本政策及产品中的说明，并按 Chrome Web Store 的要求告知用户。</p>
+    <section id="choices" aria-labelledby="choices-title">
+      <h2 id="choices-title">用户选择与政策变化</h2>
+      <p>用户可在菜单栏关闭网页链接接管、暂停标签页复用、管理例外域名，或卸载扩展与应用。若以后改变所处理的数据、用途或接收方，开发者会先更新本政策及产品中的说明，并按 Chrome Web Store 的要求告知用户。</p>
+    </section>
 
-    <h2>Limited Use 声明</h2>
-    <p>Chrome Tab Router 对通过 Chrome 扩展 API 获得的信息遵守 <a href="https://developer.chrome.com/docs/webstore/program-policies/policies">Chrome Web Store User Data Policy</a> 的 Limited Use 要求，只为上述向用户展示的链接复用功能使用浏览活动数据。</p>
-    <footer>如对本政策或数据处理有疑问，请通过 <a href="https://github.com/wuruoye/chrome-tab-router/issues">GitHub Issues</a> 联系开发者。</footer>
+    <section id="limited-use" aria-labelledby="limited-use-title">
+      <h2 id="limited-use-title">Limited Use 声明</h2>
+      <p>Chrome Tab Router 对通过 Chrome 扩展 API 获得的信息遵守 <a href="https://developer.chrome.com/docs/webstore/program-policies/policies">Chrome Web Store User Data Policy</a> 的 Limited Use 要求，只为上述向用户展示的链接复用功能使用浏览活动数据。</p>
+    </section>
+
+    <p class="policy-contact">如对本政策或数据处理有疑问，请通过 <a href="https://github.com/wuruoye/chrome-tab-router/issues">GitHub Issues</a> 联系开发者。</p>
   </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>由 <a href="https://github.com/wuruoye">wuruoye</a> 维护 · Chrome Tab Router</p>
+      <nav class="footer-links" aria-label="更多信息">
+        <a href="./">返回官网</a>
+        <a href="https://github.com/wuruoye/chrome-tab-router">GitHub</a>
+        <a href="https://github.com/wuruoye/chrome-tab-router/issues">支持与反馈</a>
+        <a href="https://wuruoye.github.io/chrome-tab-router/privacy.html">GitHub Pages 镜像</a>
+      </nav>
+    </div>
+  </footer>
 </body>
 </html>

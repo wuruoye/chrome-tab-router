@@ -5,47 +5,58 @@
   <meta name="viewport" content="width=1280, initial-scale=1">
   <title>Chrome 开发版扩展实际弹窗 · Chrome Tab Router</title>
   <style>
-    :root { color-scheme: light; }
+    :root { color-scheme: light; --ink: #213650; --muted: #737c87; --line: #e8e9e7; --accent: #cf6757; }
     * { box-sizing: border-box; }
     html, body { width: 1280px; height: 800px; margin: 0; overflow: hidden; }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #203550; }
-    .canvas {
-      width: 1280px;
-      height: 800px;
-      display: grid;
-      grid-template-columns: 560px 1fr;
-      gap: 72px;
-      padding: 48px 72px;
-      background: #faf9f5;
-    }
-    .copy { align-self: center; padding-bottom: 6px; }
-    .brand { margin: 0 0 39px; font-size: 27px; font-weight: 650; letter-spacing: -.015em; }
-    h1 { margin: 0 0 34px; font-size: 60px; line-height: 1.22; font-weight: 700; letter-spacing: -.035em; }
-    .description { margin: 0 0 34px; font-size: 24px; color: #66717d; line-height: 1.6; }
-    .features { list-style: none; margin: 0 0 45px; padding: 0; display: grid; gap: 19px; }
-    .features li { display: flex; align-items: baseline; gap: 15px; font-size: 22px; line-height: 1.5; color: #43566d; }
-    .features li::before { content: ""; flex: 0 0 7px; height: 7px; border-radius: 50%; background: #d15b47; transform: translateY(-3px); }
-    .caption { display: inline-block; margin: 0; padding: 9px 14px; border: 1px solid #e6e1d8; border-radius: 8px; background: #fffefa; color: #697480; font-size: 16px; line-height: 1.5; }
-    .popup { margin: 0; height: 704px; display: flex; align-items: center; justify-content: center; }
-    .popup img { display: block; width: 504px; height: auto; max-width: 100%; max-height: 704px; object-fit: contain; box-shadow: 0 16px 44px rgb(32 53 80 / 9%); }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: var(--ink); }
+    .canvas { width: 1280px; height: 800px; padding: 28px 56px 20px; display: grid; grid-template-rows: 64px 1fr; gap: 16px; background: #fcfcfa; }
+    .brand-header { display: flex; align-items: center; justify-content: space-between; padding-bottom: 15px; border-bottom: 1px solid var(--line); }
+    .brand { display: flex; align-items: center; gap: 13px; }
+    .brand img { width: 48px; height: 48px; display: block; }
+    .brand-name { margin: 0; font-size: 21px; font-weight: 650; letter-spacing: -.02em; }
+    .brand-note { margin: 0; font-size: 13px; color: var(--muted); }
+    .content { display: grid; grid-template-columns: 420px 1fr; gap: 44px; min-height: 0; }
+    .story { align-self: center; max-width: 400px; padding-left: 8px; padding-bottom: 6px; }
+    .eyebrow { display: flex; align-items: center; gap: 8px; margin: 0 0 17px; font-size: 13px; font-weight: 600; color: var(--accent); }
+    .eyebrow::before { content: ""; width: 18px; height: 2px; background: var(--accent); }
+    h1 { margin: 0 0 19px; font-size: 40px; line-height: 1.4; font-weight: 650; letter-spacing: -.035em; }
+    .summary { margin: 0; font-size: 19px; line-height: 1.8; color: #6d7784; }
+    .shared { margin: 30px 0 0; padding: 22px 0 0; border-top: 1px solid var(--line); }
+    .shared-label { margin: 0 0 15px; font-size: 13px; color: #89929c; }
+    .chips { display: flex; flex-wrap: wrap; gap: 9px; }
+    .chips span { padding: 7px 12px; border: 1px solid #e1e6ea; border-radius: 7px; font-size: 14px; color: #566b81; background: #fff; }
+    .local { display: flex; align-items: center; gap: 9px; margin: 23px 0 0; color: #8b929a; font-size: 13px; }
+    .local svg { width: 16px; height: 16px; color: #8c9baa; }
+    .interface { margin: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 13px; min-height: 0; }
+    .interface img { display: block; width: 664px; height: auto; max-width: 100%; object-fit: contain; box-shadow: 0 8px 28px rgb(35 51 74 / 7%); }
+    figcaption { margin: 0; font-size: 13px; line-height: 20px; color: #8a929b; }
   </style>
 </head>
 <body>
   <main class="canvas" aria-label="1280×800 商店截图排版">
-    <section class="copy">
-      <p class="brand">Chrome Tab Router</p>
-      <h1>自动连接，<br>共用一份设置。</h1>
-      <p class="description">Chrome 扩展与 Mac 应用配合。</p>
-      <ul class="features">
-        <li>打开扩展，自动检测本机连接。</li>
-        <li>刷新和匹配选项与 Mac 共用。</li>
-        <li>目标网址只在本机处理。</li>
-      </ul>
-      <p class="caption">开发版扩展实际弹窗 · 1.3.0</p>
-    </section>
-    <figure class="popup">
-      <img src="../assets/extension-popup-1.3.0.jpg" width="728" height="640" alt="Chrome Tab Router 1.3.0 开发版扩展的真实弹窗，显示已连接、网页链接接管已开启及与 Mac 共用的设置。">
-    </figure>
+    <header class="brand-header">
+      <div class="brand">
+        <img src="../../ChromeExtension/icons/icon128.png" width="128" height="128" alt="">
+        <p class="brand-name">Chrome Tab Router</p>
+      </div>
+      <p class="brand-note">macOS + Chrome · 1.3.0</p>
+    </header>
+    <div class="content">
+      <section class="story">
+        <p class="eyebrow">Chrome 配套扩展</p>
+        <h1>在菜单栏调整，<br>扩展自动读取。</h1>
+        <p class="summary">连接 Mac 应用，<br>网页链接交给同一套路由。</p>
+        <div class="shared">
+          <p class="shared-label">一份设置，两处共用</p>
+          <div class="chips"><span>刷新方式</span><span>网址匹配</span><span>例外网站</span></div>
+        </div>
+        <p class="local"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="2.5" y="6.5" width="11" height="7" rx="2" stroke="currentColor"/><path d="M5 6.5V4a3 3 0 0 1 6 0v2.5" stroke="currentColor" stroke-linecap="round"/></svg>完整网址仅在用户设备上处理。</p>
+      </section>
+      <figure class="interface">
+        <img src="../assets/extension-popup-1.3.0.jpg" width="728" height="640" alt="Chrome Tab Router 1.3.0 开发版扩展的真实弹窗，显示已连接、网页链接接管已开启及与 Mac 共用的设置。">
+        <figcaption>Chrome 实际弹窗 · 开发版扩展</figcaption>
+      </figure>
+    </div>
   </main>
 </body>
 </html>

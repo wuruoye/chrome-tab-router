@@ -67,15 +67,6 @@
     </div>
     <footer>本页仅展示当前页面 URL，帮助观察参数与锚点变化。页面没有后台请求、分析或追踪脚本。</footer>
   </main>
-  <script>
-    function displayCurrentAddress() {
-      document.getElementById("current-url").textContent = window.location.href;
-      document.getElementById("current-path").textContent = window.location.pathname;
-      document.getElementById("current-query").textContent = window.location.search || "无查询参数";
-      document.getElementById("current-fragment").textContent = window.location.hash || "无页面锚点";
-    }
-    displayCurrentAddress();
-    window.addEventListener("hashchange", displayCurrentAddress);
-  </script>
+  <script src="url-display.js"></script>
 </body>
 </html>

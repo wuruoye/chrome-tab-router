@@ -3,49 +3,79 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=1280, initial-scale=1">
-  <title>Mac 菜单栏实际界面 · Chrome Tab Router</title>
+  <title>菜单设置 · Chrome Tab Router</title>
   <style>
-    :root { color-scheme: light; }
+    :root { color-scheme: light; --ink: #213650; --muted: #737c87; --line: #e8e9e7; --accent: #cf6757; }
     * { box-sizing: border-box; }
     html, body { width: 1280px; height: 800px; margin: 0; overflow: hidden; }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #203550; }
-    .canvas {
-      width: 1280px;
-      height: 800px;
-      display: grid;
-      grid-template-columns: 560px 1fr;
-      gap: 72px;
-      padding: 48px 72px;
-      background: #faf9f5;
-    }
-    .copy { align-self: center; padding-bottom: 6px; }
-    .brand { margin: 0 0 39px; font-size: 27px; font-weight: 650; letter-spacing: -.015em; }
-    h1 { margin: 0 0 34px; font-size: 60px; line-height: 1.22; font-weight: 700; letter-spacing: -.035em; }
-    .description { margin: 0 0 34px; font-size: 24px; color: #66717d; line-height: 1.6; }
-    .features { list-style: none; margin: 0 0 45px; padding: 0; display: grid; gap: 19px; }
-    .features li { display: flex; align-items: baseline; gap: 15px; font-size: 22px; line-height: 1.5; color: #43566d; }
-    .features li::before { content: ""; flex: 0 0 7px; height: 7px; border-radius: 50%; background: #d15b47; transform: translateY(-3px); }
-    .caption { display: inline-block; margin: 0; padding: 9px 14px; border: 1px solid #e6e1d8; border-radius: 8px; background: #fffefa; color: #697480; font-size: 16px; line-height: 1.5; }
-    .menu { margin: 0; height: 704px; display: flex; align-items: center; justify-content: center; }
-    .menu img { display: block; height: 704px; width: auto; max-width: 100%; object-fit: contain; box-shadow: 0 16px 44px rgb(32 53 80 / 9%); }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: var(--ink); }
+    .canvas { width: 1280px; height: 800px; padding: 28px 56px 20px; display: grid; grid-template-rows: 64px 1fr; gap: 16px; background: #fcfcfa; }
+    .brand-header { display: flex; align-items: center; justify-content: space-between; padding-bottom: 15px; border-bottom: 1px solid var(--line); }
+    .brand { display: flex; align-items: center; gap: 13px; }
+    .brand img { width: 48px; height: 48px; display: block; }
+    .brand-name { margin: 0; font-size: 21px; font-weight: 650; letter-spacing: -.02em; }
+    .brand-note { margin: 0; font-size: 13px; color: var(--muted); }
+    .content { display: grid; grid-template-columns: 1fr 508px; gap: 52px; min-height: 0; }
+    .story { align-self: center; max-width: 540px; padding-left: 8px; }
+    .eyebrow { display: flex; align-items: center; gap: 8px; margin: 0 0 17px; font-size: 13px; font-weight: 600; color: var(--accent); }
+    .eyebrow::before { content: ""; width: 18px; height: 2px; background: var(--accent); }
+    h1 { margin: 0 0 17px; font-size: 40px; line-height: 1.35; font-weight: 650; letter-spacing: -.035em; }
+    .summary { margin: 0; font-size: 19px; line-height: 1.7; color: #6d7784; }
+    .diagram { margin: 34px 0 0; padding: 23px 24px 20px; border: 1px solid #e6e8e7; border-radius: 18px; background: #fff; }
+    .diagram-title { display: flex; justify-content: space-between; align-items: center; margin: 0 0 19px; font-size: 13px; font-weight: 600; color: #5a6b7e; }
+    .diagram-title span { font-weight: 400; color: #949ba3; }
+    .flow { display: grid; grid-template-columns: 1fr 38px 1fr; gap: 10px; align-items: center; }
+    .link { padding: 13px 16px; background: #f6f8fa; border: 1px solid #edf0f2; border-radius: 10px; }
+    .link-label { display: block; margin-bottom: 6px; font-size: 12px; color: #7b8794; }
+    .link code { font: 15px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; color: #304863; white-space: nowrap; }
+    .link.existing { border-color: #d9e2eb; background: #f3f6fa; }
+    .arrow { display: block; width: 38px; height: 28px; color: var(--accent); }
+    .diagram-caption { margin: 16px 0 0; font-size: 13px; color: #89929c; }
+    .settings { display: flex; align-items: center; gap: 13px; margin-top: 23px; font-size: 14px; color: #6a7785; }
+    .settings span + span { border-left: 1px solid #dde2e6; padding-left: 13px; }
+    .interface { margin: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 10px; min-height: 0; }
+    .interface img { display: block; height: 640px; width: auto; max-width: 508px; object-fit: contain; box-shadow: 0 8px 28px rgb(35 51 74 / 7%); }
+    figcaption { margin: 0; font-size: 13px; line-height: 20px; color: #8a929b; }
   </style>
 </head>
 <body>
   <main class="canvas" aria-label="1280×800 商店截图排版">
-    <section class="copy">
-      <p class="brand">Chrome Tab Router</p>
-      <h1>打开链接，<br>回到已有页面。</h1>
-      <p class="description">所有设置都在 Mac 菜单栏里。</p>
-      <ul class="features">
-        <li>一键开关标签页复用。</li>
-        <li>按需更新网址或刷新页面。</li>
-        <li>集中管理网址匹配与例外网站。</li>
-      </ul>
-      <p class="caption">Mac 菜单栏实际界面 · 1.3.0</p>
-    </section>
-    <figure class="menu">
-      <img src="../assets/mac-menu-1.3.0.jpg" width="548" height="854" alt="Chrome Tab Router 1.3.0 的真实 Mac 菜单栏菜单，包含标签页复用、网址匹配、例外网站和扩展管理等设置。">
-    </figure>
+    <header class="brand-header">
+      <div class="brand">
+        <img src="../../ChromeExtension/icons/icon128.png" width="128" height="128" alt="">
+        <p class="brand-name">Chrome Tab Router</p>
+      </div>
+      <p class="brand-note">macOS + Chrome · 1.3.0</p>
+    </header>
+    <div class="content">
+      <section class="story">
+        <p class="eyebrow">链接复用</p>
+        <h1>重复链接，回到原页面。</h1>
+        <p class="summary">复用标签页，按需刷新或更新网址。</p>
+        <div class="diagram" aria-label="链接复用流程示意">
+          <p class="diagram-title">保留已有标签页<span>流程示意</span></p>
+          <div class="flow">
+            <div class="link">
+              <span class="link-label">再次打开的链接</span>
+              <code>/page?id=2</code>
+            </div>
+            <svg class="arrow" viewBox="0 0 38 28" aria-hidden="true"><path d="M4 14h28m-7-7 7 7-7 7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <div class="link existing">
+              <span class="link-label">已有标签页</span>
+              <code>/page?id=2</code>
+            </div>
+          </div>
+          <p class="diagram-caption">匹配到相同网址时，直接切回原页。</p>
+        </div>
+        <div class="settings" aria-label="菜单栏设置">
+          <span>网址匹配</span><span>例外网站</span><span>登录启动</span>
+        </div>
+      </section>
+      <figure class="interface">
+        <img src="../assets/mac-menu-light.png" width="1005" height="1566" alt="Chrome Tab Router 1.3.0 菜单设置的提亮展示图，完整保留标签页复用、网址匹配、例外网站和扩展管理等设置。">
+        <figcaption>菜单设置 · 1.3.0</figcaption>
+      </figure>
+    </div>
   </main>
 </body>
 </html>

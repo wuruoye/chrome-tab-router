@@ -30,7 +30,9 @@ Mac 应用在用户设备上读取 Chrome 当前打开的标签页 URL，与目�
 
 ## 公开页面与支持渠道
 
-安装说明和本政策由 GitHub Pages 托管，页面没有分析脚本、广告、表单或应用内追踪。访问页面、下载 GitHub Release 安装包，或主动在 GitHub Issues 提交问题时，由 GitHub 提供相应服务，遵循 [GitHub 隐私声明](https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement)。GitHub Issues 中的用户提交内容公开可见。这些页面和支持服务不会从 Chrome Tab Router 读取用户的浏览 URL、设置或操作日志。
+官网由开发者的服务器提供，GitHub Pages 提供镜像。页面没有分析脚本、广告、表单或应用内追踪；验证页仅在浏览器中显示当前页面的 URL，不请求 App 数据。访问官网时，浏览器会向托管服务器发送提供页面所需的常规网络请求，可能包含 IP 地址、浏览器信息和访问路径。这些请求与 App 为复用标签页而在本机处理的网址分开，官网不会从 App 读取用户的浏览 URL、设置或操作日志。
+
+公开仓库、GitHub Pages 镜像、Release 安装包下载和 GitHub Issues 由 GitHub 提供相应服务，遵循 [GitHub 隐私声明](https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement)。GitHub Issues 中的用户提交内容公开可见。这些页面和支持服务不会从 Chrome Tab Router 读取用户的浏览 URL、设置或操作日志。
 
 ## 用户选择与政策变化
 
