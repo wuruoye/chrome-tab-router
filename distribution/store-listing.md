@@ -2,6 +2,8 @@
 
 准备版本：1.3.0。核对日期：2026-10-13。以下各字段正文可直接复制到商店草稿。1.3.0 预览版安装包及公开页面已完成发布核验；当前商店草稿包为 1.2.0，仍需上传最终 1.3.0 ZIP，先不提交审核。
 
+Mac 1.3.0 已构建安装，严格签名检查、本机协议读取共享设置及允许来源配置已通过。真实 Chrome 扩展 1.3.0 重载与自动连接、菜单栏功能截图仍待用户操作和核验。以下功能说明和审核步骤描述产品行为，不表示本次 Chrome 连接或商店审核已经完成。
+
 ## 产品信息
 
 - 名称：Chrome Tab Router · 链接复用
@@ -68,6 +70,15 @@ https://wuruoye.github.io/chrome-tab-router/privacy.html
 支持： https://github.com/wuruoye/chrome-tab-router/issues
 
 隐私政策： https://wuruoye.github.io/chrome-tab-router/privacy.html
+
+## 图片材料
+
+| 文件 | 尺寸 | 用途与状态 |
+|---|---|---|
+| `assets/installation-page-1280x800.jpg` | 1280×800 | 真实线上安装说明网页的补充截图，尺寸已确认。可用于说明安装流程；菜单栏、扩展弹窗及功能成功画面另行采集。 |
+| `assets/chrome-web-store-small-promo.png` | 440×280 | 已准备的小宣传图，说明标签页复用功能；同名 SVG 为可编辑原稿。 |
+
+菜单栏设置、扩展“已连接”弹窗和实际复用成功画面的截图仍待完成。图片与文案尚未确认填入商店后台；1.3.0 草稿包更新和提交审核均未完成。素材说明见 [assets/README.md](assets/README.md)。
 
 ## 参考资料
 
