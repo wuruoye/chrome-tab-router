@@ -30,17 +30,18 @@ if CommandLine.arguments.contains("--status") {
     exit(0)
 }
 
-final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSTextFieldDelegate {
+final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     private var statusItem: NSStatusItem!
-    private var window: NSWindow?
-    private var statusLabel: NSTextField?
-    private var resultLabel: NSTextField?
-    private var defaultButton: NSButton?
-    private var restoreButton: NSButton?
+    private var statusMenuItem: NSMenuItem?
+    private var resultMenuItem: NSMenuItem?
+    private var defaultMenuItem: NSMenuItem?
+    private var restoreMenuItem: NSMenuItem?
     private let routingEngine = RoutingEngine()
-    private var settingButtons: [String: NSButton] = [:]
-    private var loginButton: NSButton?
-    private var extensionLabel: NSTextField?
+    private var settingMenuItems: [String: NSMenuItem] = [:]
+    private var loginMenuItem: NSMenuItem?
+    private var extensionMenuItem: NSMenuItem?
+    private var exclusionsMenu: NSMenu?
+    private var menuRequested = false
     private var pendingURLs: [URL] = []
     private var isRouting = false
     private var isChangingDefault = false
@@ -57,26 +58,24 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSTe
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         buildMenu()
-        if CommandLine.arguments.contains("--setup") {
-            showSettings(nil)
+        if CommandLine.arguments.contains("--setup") || menuRequested {
+            menuRequested = false
+            DispatchQueue.main.async { self.showMenu(nil) }
         }
         if !pendingURLs.isEmpty {
             processNextURL()
-        } else if !preferences.bool(forKey: "hasLaunched") {
-            showSettings(nil)
         }
-        preferences.set(true, forKey: "hasLaunched")
         if CommandLine.arguments.contains("--make-default") {
             makeDefault(nil)
         }
     }
 
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
-        showSettings(nil)
+        showMenu(nil)
         return true
     }
 
-    func windowDidBecomeKey(_ notification: Notification) {
+    func menuNeedsUpdate(_ menu: NSMenu) {
         updateStatus()
     }
 
@@ -102,12 +101,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSTe
                     }
                     try connectExtension(identifier)
                     lastResult = "Chrome 扩展已连接，请重新打开扩展弹窗确认。"
-                    showSettings(nil)
+                    showMenu(nil)
                 } catch {
                     showMessage("扩展连接未完成", (error as? RouterError)?.message ?? error.localizedDescription)
                 }
             }
-            if url.host == "settings" { showSettings(nil) }
+            if url.host == "settings" { showMenu(nil) }
             if url.host == "make-default" { makeDefault(nil) }
             if url.host == "restore-default" { restoreDefault(nil) }
             return
@@ -195,157 +194,156 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSTe
         statusItem.button?.image = NSImage(systemSymbolName: "arrow.triangle.2.circlepath", accessibilityDescription: appName)
         statusItem.button?.toolTip = appName
         let menu = NSMenu()
-        menu.addItem(withTitle: "Chrome Tab Router", action: nil, keyEquivalent: "")
+        menu.autoenablesItems = false
+        menu.delegate = self
+        addLabel(appName, to: menu)
+        statusMenuItem = addLabel("", to: menu)
+        resultMenuItem = addLabel(lastResult, to: menu)
         menu.addItem(.separator())
-        addItem("设置…", action: #selector(showSettings(_:)), to: menu)
+        addSetting("enabled", title: "启用标签页复用", to: menu)
+        addSetting("refreshReusedTabs", title: "切换到已有标签页后刷新", to: menu)
+        addSetting("useIncomingURL", title: "复用时更新为新链接", to: menu)
+        addSetting("searchAllWindows", title: "在所有 Chrome 窗口中查找", to: menu)
+        addSetting("interceptBrowserLinks", title: "接管 Chrome 网页的新标签页链接", to: menu)
+
+        let matching = addSubmenu("网址匹配", to: menu)
+        addSetting("ignoreFragments", title: "忽略页面锚点（# 后的内容）", to: matching)
+        addSetting("ignoreQueryParameters", title: "忽略所有查询参数（? 后的内容）", to: matching)
+        addSetting("ignoreTrackingParameters", title: "忽略常见跟踪参数（utm_、gclid 等）", to: matching)
+        exclusionsMenu = addSubmenu("例外网站", to: menu)
+        loginMenuItem = addItem("登录时自动启动", action: #selector(changeLoginSetting(_:)), to: menu)
+        menu.addItem(.separator())
+
+        let browser = addSubmenu("默认浏览器", to: menu)
+        defaultMenuItem = addItem("设为默认浏览器", action: #selector(makeDefault(_:)), to: browser)
+        restoreMenuItem = addItem("恢复原来的默认浏览器", action: #selector(restoreDefault(_:)), to: browser)
+        let chromeExtension = addSubmenu("Chrome 扩展", to: menu)
+        extensionMenuItem = addLabel("", to: chromeExtension)
+        addItem("打开扩展目录…", action: #selector(openExtensionDirectory(_:)), to: chromeExtension)
+        addItem("安装与连接说明…", action: #selector(connectChromeExtension(_:)), to: chromeExtension)
+        addItem("打开 Chrome 自动化权限设置…", action: #selector(openAutomationSettings(_:)), to: menu)
         addItem("打开剪贴板中的链接", action: #selector(openClipboard(_:)), to: menu)
         menu.addItem(.separator())
         addItem("退出", action: #selector(quit(_:)), to: menu)
         statusItem.menu = menu
+        updateStatus()
     }
 
-    private func addItem(_ title: String, action: Selector, to menu: NSMenu) {
+    @discardableResult
+    private func addItem(_ title: String, action: Selector, to menu: NSMenu) -> NSMenuItem {
         let item = NSMenuItem(title: title, action: action, keyEquivalent: "")
         item.target = self
         menu.addItem(item)
+        return item
     }
 
-    @objc private func showSettings(_ sender: Any?) {
-        if window == nil { buildWindow() }
-        updateStatus()
-        window?.makeKeyAndOrderFront(nil)
-        NSApp.activate(ignoringOtherApps: true)
+    @discardableResult
+    private func addLabel(_ title: String, to menu: NSMenu) -> NSMenuItem {
+        let item = NSMenuItem(title: title, action: nil, keyEquivalent: "")
+        item.isEnabled = false
+        menu.addItem(item)
+        return item
     }
 
-    private func buildWindow() {
-        let panel = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 590, height: 760),
-            styleMask: [.titled, .closable, .miniaturizable], backing: .buffered, defer: false
-        )
-        panel.title = appName
-        panel.isReleasedWhenClosed = false
-        panel.delegate = self
-        panel.center()
-        let title = NSTextField(labelWithString: "打开链接，回到已有页面")
-        title.font = .systemFont(ofSize: 23, weight: .semibold)
-        let description = NSTextField(wrappingLabelWithString: "已有相同网址时，切换到那个 Chrome 标签页并刷新。\n没有相同网址时，在 Chrome 新开标签页。")
-        description.font = .systemFont(ofSize: 14)
-        description.textColor = .secondaryLabelColor
-        let matching = NSTextField(wrappingLabelWithString: "设置自动保存。默认按完整网址匹配，可分别忽略参数或锚点。")
-        matching.font = .systemFont(ofSize: 12)
-        matching.textColor = .secondaryLabelColor
-        let status = NSTextField(wrappingLabelWithString: "")
-        status.font = .systemFont(ofSize: 14, weight: .medium)
-        statusLabel = status
-        let makeButton = NSButton(title: "设为默认浏览器", target: self, action: #selector(makeDefault(_:)))
-        makeButton.bezelStyle = .rounded
-        defaultButton = makeButton
-        let restore = NSButton(title: "恢复原来的默认浏览器", target: self, action: #selector(restoreDefault(_:)))
-        restore.bezelStyle = .rounded
-        restoreButton = restore
-        let buttons = NSStackView(views: [makeButton, restore])
-        buttons.orientation = .horizontal
-        buttons.spacing = 10
-        let automation = NSButton(title: "打开 Chrome 自动化权限设置", target: self, action: #selector(openAutomationSettings(_:)))
-        automation.bezelStyle = .rounded
-        let result = NSTextField(wrappingLabelWithString: lastResult)
-        result.font = .systemFont(ofSize: 12)
-        result.textColor = .secondaryLabelColor
-        resultLabel = result
-        let settings = RoutingSettings()
-        let checkOptions = [
-            ("enabled", "启用标签页复用"),
-            ("refreshReusedTabs", "切换到已有标签页后刷新"),
-            ("searchAllWindows", "在所有 Chrome 窗口中查找"),
-            ("ignoreFragments", "匹配时忽略页面锚点（# 后的内容）"),
-            ("ignoreTrackingParameters", "匹配时忽略常见跟踪参数（utm_、gclid 等）"),
-            ("ignoreQueryParameters", "匹配时忽略所有查询参数（? 后的内容）"),
-            ("useIncomingURL", "复用时更新为新链接（参数或锚点有变化时）"),
-            ("interceptBrowserLinks", "接管 Chrome 网页中打开新标签页的链接")
-        ]
-        let checks = NSStackView()
-        checks.orientation = .vertical
-        checks.alignment = .leading
-        checks.spacing = 9
-        for (key, label) in checkOptions {
-            let checkbox = NSButton(checkboxWithTitle: label, target: self, action: #selector(changeSetting(_:)))
-            checkbox.identifier = NSUserInterfaceItemIdentifier(key)
-            checkbox.state = settings[key] ? .on : .off
-            settingButtons[key] = checkbox
-            checks.addArrangedSubview(checkbox)
+    private func addSubmenu(_ title: String, to menu: NSMenu) -> NSMenu {
+        let item = NSMenuItem(title: title, action: nil, keyEquivalent: "")
+        let submenu = NSMenu(title: title)
+        submenu.autoenablesItems = false
+        item.submenu = submenu
+        menu.addItem(item)
+        return submenu
+    }
+
+    private func addSetting(_ key: String, title: String, to menu: NSMenu) {
+        let item = addItem(title, action: #selector(changeSetting(_:)), to: menu)
+        item.representedObject = key
+        settingMenuItems[key] = item
+    }
+
+    @objc private func showMenu(_ sender: Any?) {
+        guard let button = statusItem?.button else {
+            menuRequested = true
+            return
         }
-        let login = NSButton(checkboxWithTitle: "登录时自动启动", target: self, action: #selector(changeLoginSetting(_:)))
-        loginButton = login
-        checks.addArrangedSubview(login)
-        let exclusionsLabel = NSTextField(labelWithString: "例外网站：这些网站每次新开，可填写域名及其子域名。")
-        exclusionsLabel.font = .systemFont(ofSize: 12)
-        exclusionsLabel.textColor = .secondaryLabelColor
-        let exclusions = NSTextField(string: preferences.string(forKey: "routing.excludedDomains") ?? "")
-        exclusions.placeholderString = "例如 gmail.com, docs.google.com（逗号分隔）"
-        exclusions.identifier = NSUserInterfaceItemIdentifier("excludedDomains")
-        exclusions.delegate = self
-        let exclusionsGroup = NSStackView(views: [exclusionsLabel, exclusions])
-        exclusionsGroup.orientation = .vertical
-        exclusionsGroup.alignment = .leading
-        exclusionsGroup.spacing = 5
-        exclusions.widthAnchor.constraint(equalToConstant: 514).isActive = true
-        let extensionStatus = NSTextField(wrappingLabelWithString: "")
-        extensionStatus.font = .systemFont(ofSize: 12)
-        extensionStatus.textColor = .secondaryLabelColor
-        extensionLabel = extensionStatus
-        let extensionButtons = NSStackView(views: [
-            NSButton(title: "打开扩展目录", target: self, action: #selector(openExtensionDirectory(_:))),
-            NSButton(title: "扩展安装与连接说明", target: self, action: #selector(connectChromeExtension(_:)))
-        ])
-        extensionButtons.orientation = .horizontal
-        extensionButtons.spacing = 10
-        for case let button as NSButton in extensionButtons.arrangedSubviews { button.bezelStyle = .rounded }
-        let stack = NSStackView(views: [title, description, matching, status, buttons, checks,
-                                      exclusionsGroup, extensionStatus, extensionButtons, automation, result])
-        stack.orientation = .vertical
-        stack.alignment = .leading
-        stack.spacing = 15
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        panel.contentView!.addSubview(stack)
-        NSLayoutConstraint.activate([
-            stack.leadingAnchor.constraint(equalTo: panel.contentView!.leadingAnchor, constant: 28),
-            stack.trailingAnchor.constraint(equalTo: panel.contentView!.trailingAnchor, constant: -28),
-            stack.topAnchor.constraint(equalTo: panel.contentView!.topAnchor, constant: 25)
-        ])
-        window = panel
+        updateStatus()
+        NSApp.activate(ignoringOtherApps: true)
+        button.performClick(nil)
     }
 
     private func updateStatus() {
         let ownID = Bundle.main.bundleIdentifier
         let isDefault = supportedSchemes.allSatisfy { handlerID(for: $0) == ownID }
-        statusLabel?.stringValue = isDefault ? "已设为系统默认浏览器。" : "尚未设为系统默认浏览器。"
-        defaultButton?.isEnabled = !isDefault && !isChangingDefault
-        restoreButton?.isEnabled = preferences.dictionary(forKey: "previousHandlers") != nil && !isChangingDefault
-        resultLabel?.stringValue = lastResult
+        statusMenuItem?.title = isDefault ? "已设为系统默认浏览器" : "尚未设为系统默认浏览器"
+        defaultMenuItem?.isEnabled = !isDefault && !isChangingDefault
+        restoreMenuItem?.isEnabled = preferences.dictionary(forKey: "previousHandlers") != nil && !isChangingDefault
+        resultMenuItem?.title = lastResult
         let settings = RoutingSettings()
-        for (key, button) in settingButtons { button.state = settings[key] ? .on : .off }
-        settingButtons["ignoreTrackingParameters"]?.isEnabled = !settings["ignoreQueryParameters"]
-        loginButton?.state = [.enabled, .requiresApproval].contains(SMAppService.mainApp.status) ? .on : .off
-        extensionLabel?.stringValue = preferences.string(forKey: "chromeExtensionID") == nil
-            ? "Chrome 网页链接需要先安装并连接配套扩展。" : "已登记扩展连接，请在 Chrome 扩展弹窗中确认“已连接”。"
+        for (key, item) in settingMenuItems { item.state = settings[key] ? .on : .off }
+        settingMenuItems["ignoreTrackingParameters"]?.isEnabled = !settings["ignoreQueryParameters"]
+        loginMenuItem?.state = [.enabled, .requiresApproval].contains(SMAppService.mainApp.status) ? .on : .off
+        extensionMenuItem?.title = preferences.string(forKey: "chromeExtensionID") == nil
+            ? "尚未登记扩展连接" : "扩展连接已登记"
+        extensionMenuItem?.toolTip = "在 Chrome 扩展弹窗中确认是否显示“已连接”。"
+        updateExclusionsMenu(settings.excludedDomains)
     }
 
-    @objc private func changeSetting(_ sender: NSButton) {
-        guard let key = sender.identifier?.rawValue else { return }
-        preferences.set(sender.state == .on, forKey: "routing.\(key)")
+    @objc private func changeSetting(_ sender: NSMenuItem) {
+        guard let key = sender.representedObject as? String else { return }
+        preferences.set(!RoutingSettings()[key], forKey: "routing.\(key)")
         preferences.synchronize()
         updateStatus()
     }
 
-    func controlTextDidChange(_ notification: Notification) {
-        guard let field = notification.object as? NSTextField, field.identifier?.rawValue == "excludedDomains" else { return }
-        preferences.set(field.stringValue, forKey: "routing.excludedDomains")
-        preferences.synchronize()
+    private func updateExclusionsMenu(_ domains: [String]) {
+        guard let menu = exclusionsMenu else { return }
+        menu.removeAllItems()
+        addLabel("这些网站及其子域名每次新开标签页", to: menu)
+        addItem("添加网站…", action: #selector(addExcludedDomain(_:)), to: menu)
+        menu.addItem(.separator())
+        if domains.isEmpty {
+            addLabel("暂无例外网站", to: menu)
+        } else {
+            for domain in domains {
+                let item = addItem("移除 \(domain)", action: #selector(removeExcludedDomain(_:)), to: menu)
+                item.representedObject = domain
+            }
+        }
     }
 
-    @objc private func changeLoginSetting(_ sender: NSButton) {
+    @objc private func addExcludedDomain(_ sender: Any?) {
+        let alert = NSAlert()
+        alert.messageText = "添加例外网站"
+        alert.informativeText = "填写域名及其子域名，例如 gmail.com。多个网站用逗号分隔。"
+        let field = NSTextField(frame: NSRect(x: 0, y: 0, width: 320, height: 24))
+        field.placeholderString = "gmail.com, docs.google.com"
+        alert.accessoryView = field
+        alert.addButton(withTitle: "添加")
+        alert.addButton(withTitle: "取消")
+        alert.window.initialFirstResponder = field
+        NSApp.activate(ignoringOtherApps: true)
+        guard alert.runModal() == .alertFirstButtonReturn else { return }
+        let domains = RoutingSettings.parseDomains(field.stringValue)
+        guard !domains.isEmpty else {
+            showMessage("未添加网站", "请填写有效域名，例如 gmail.com。")
+            return
+        }
+        saveExcludedDomains(Array(Set(RoutingSettings().excludedDomains + domains)).sorted())
+    }
+
+    @objc private func removeExcludedDomain(_ sender: NSMenuItem) {
+        guard let domain = sender.representedObject as? String else { return }
+        saveExcludedDomains(RoutingSettings().excludedDomains.filter { $0 != domain })
+    }
+
+    private func saveExcludedDomains(_ domains: [String]) {
+        preferences.set(domains.joined(separator: ", "), forKey: "routing.excludedDomains")
+        preferences.synchronize()
+        updateStatus()
+    }
+
+    @objc private func changeLoginSetting(_ sender: NSMenuItem) {
         do {
-            if sender.state == .on {
+            if ![.enabled, .requiresApproval].contains(SMAppService.mainApp.status) {
                 try SMAppService.mainApp.register()
                 if SMAppService.mainApp.status == .requiresApproval { SMAppService.openSystemSettingsLoginItems() }
             } else { try SMAppService.mainApp.unregister() }
