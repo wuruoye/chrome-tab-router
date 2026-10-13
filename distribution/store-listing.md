@@ -1,8 +1,8 @@
 # Chrome Web Store 商店填写材料
 
-准备版本：1.3.0。核对日期：2026-10-13。1.3.0 预览版安装包及公开页面已完成发布核验；同一商店草稿的 Package 页面已核对版本 1.3.0、`nativeMessaging` 与主机权限范围。商品详细说明为 1362 字，官网与隐私政策地址使用 Ruoye 服务器页面。商品详情已显示“已成功保存内容。”，先不提交审核。
+准备版本：1.3.0。核对日期：2026-10-13。1.3.0 预览版安装包及公开页面已完成发布核验；同一商店草稿的 Package 页面已核对版本 1.3.0、`nativeMessaging` 与主机权限范围。商品详细说明为 1362 字，官网与隐私政策地址使用 Ruoye 服务器页面。商品详情已保存，1.3.0 已提交审核，审核后自动发布已关闭，后台显示“待审核”。
 
-Mac 1.3.0 已构建安装，严格签名检查、本机协议读取共享设置及允许来源配置已通过。真实 Chrome 弹窗的实际来源已核对为正式商店 ID `iineonbhdnmadlkkmdcofakekmjpnkmn`，显示“已连接 · 网页链接接管已开启”；Mac 最近连接记录为同一 ID。已实测正式 ID 的同完整网址普通、Command 和中键点击复用，以及不同路径新开。联系邮箱已通过 Google 验证。提亮后的菜单、新排版开发版弹窗与安装说明三张截图已上传保存，尚未提交审核。
+Mac 1.3.0 已构建安装，严格签名检查、本机协议读取共享设置及允许来源配置已通过。真实 Chrome 弹窗的实际来源已核对为正式商店 ID `iineonbhdnmadlkkmdcofakekmjpnkmn`，显示“已连接 · 网页链接接管已开启”；Mac 最近连接记录为同一 ID。已实测正式 ID 的同完整网址普通、Command 和中键点击复用，以及不同路径新开。联系邮箱已通过 Google 验证。提亮后的菜单、新排版开发版弹窗与安装说明三张截图已上传保存，1.3.0 已提交审核。
 
 Privacy 表单已于 2026-10-13 填写并保存：单一用途、`nativeMessaging` 理由、主机访问范围理由、隐私政策网址、不使用远程代码、数据类别“网络记录”和“网站内容”，以及三项 Limited Use 披露；隐私政策网址已更新为官网页面。商品分类、语言、图标、宣传图和三张截图已保存，Test instructions 已保存 437 字短版，并显示“已保存测试说明”。Distribution 已只读核对为免费、公开、所有地区，保留原设置。
 
@@ -16,8 +16,8 @@ Privacy 表单已于 2026-10-13 填写并保存：单一用途、`nativeMessagin
 - Mac 应用下载地址：[1.3.0 · Apple 芯片](https://github.com/wuruoye/chrome-tab-router/releases/download/v1.3.0/chrome-tab-router-mac-1.3.0-arm64.zip)
 - 安装说明与验证页面：[Chrome Tab Router](https://ruoye.site/chrome-tab-router/)
 - 隐私政策 URL：[隐私政策](https://ruoye.site/chrome-tab-router/privacy.html)
-- 商店项目：[Chrome Tab Router](https://chromewebstore.google.com/detail/chrome-tab-router/iineonbhdnmadlkkmdcofakekmjpnkmn)。当前仍为草稿，上架后该链接可用于安装。
-- Distribution 当前设置：免费、公开、所有地区。尚未提交审核或发布。
+- 商店项目：[Chrome Tab Router](https://chromewebstore.google.com/detail/chrome-tab-router/iineonbhdnmadlkkmdcofakekmjpnkmn)。已提交审核，审核通过后手动发布；上架后该链接可用于安装。
+- Distribution 当前设置：免费、公开、所有地区。已提交审核，审核后自动发布关闭，尚未上架。
 
 ## 详细说明
 
