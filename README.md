@@ -12,7 +12,7 @@
 
 ## 设置与参数更新
 
-点击菜单栏中的 Chrome Tab Router 图标即可查看和修改设置。“网址匹配”子菜单管理查询参数和锚点选项，“例外网站”子菜单管理排除域名。设置自动保存在 Mac 应用的 UserDefaults 中，扩展通过 Native Messaging 读取同一份设置。“Chrome 扩展”子菜单提供已登记的连接状态、扩展目录和安装与连接说明。
+点击菜单栏中的 Chrome Tab Router 图标即可查看和修改设置。“网址匹配”子菜单管理查询参数和锚点选项，“例外网站”子菜单管理排除域名。设置自动保存在 Mac 应用的 UserDefaults 中，扩展通过 Native Messaging 读取同一份设置。“Chrome 扩展”子菜单提供安装入口、自动连接配置与最近连接记录、修复自动连接、扩展目录、安装说明和隐私政策。
 
 | 设置 | 行为 |
 |---|---|
@@ -31,7 +31,19 @@
 
 例如启用“忽略所有查询参数”和“复用时更新为新链接”后，已有 `https://example.com/page?id=1`，再打开 `https://example.com/page?id=2`，会保留原标签页并载入 `id=2` 的页面。参数变化产生一次导航加载；仅锚点变化时，按刷新开关决定是否重新载入。关闭“复用时更新为新链接”后，匹配到的标签页保留原地址。
 
-## 编译与安装
+## 下载与安装
+
+1.3.0 的安装包和公开页面正在准备，以下下载与 Pages 链接仍待发布核验。
+
+- [Mac 应用 · Apple 芯片](https://github.com/wuruoye/chrome-tab-router/releases/download/v1.3.0/chrome-tab-router-mac-1.3.0-arm64.zip)
+- [Chrome 扩展 ZIP](https://github.com/wuruoye/chrome-tab-router/releases/download/v1.3.0/chrome-tab-router-extension-1.3.0.zip)
+- [安装说明与验证页面](https://wuruoye.github.io/chrome-tab-router/)
+- [隐私政策](https://wuruoye.github.io/chrome-tab-router/privacy.html)
+- [联系与支持](https://github.com/wuruoye/chrome-tab-router/issues)
+
+Mac 安装包支持 Apple 芯片和 macOS 13 或更新版本。下载后解压，将 `Chrome Tab Router.app` 放入 `~/Applications` 并打开。当前安装包尚未经过 Apple 公证；macOS 如阻止首次打开，可按 [Apple 的说明](https://support.apple.com/guide/mac-help/open-a-mac-app-from-an-unknown-developer-mh40616/mac)在“系统设置 → 隐私与安全性”中确认打开。菜单栏“默认浏览器”中提供“设为默认浏览器”操作。首次路由链接时，允许应用控制 Google Chrome。
+
+## 从源码编译
 
 需要 macOS 13 或更新版本，以及 Xcode 命令行工具。本机构建当前 CPU 架构的应用。
 
@@ -49,16 +61,24 @@ zsh scripts/install.sh
 
 外部应用打开的链接由 Mac 应用接收。Chrome 网页内部打开新标签页的链接需要配套扩展。
 
-1. 在 Chrome 打开 `chrome://extensions/`，开启开发者模式，点击“加载已解压的扩展程序”。
-2. 选择本项目的 `ChromeExtension` 目录；也可从 Mac 应用菜单栏打开应用自带的扩展目录及安装说明。
-3. 点击 Chrome 工具栏中的本扩展，选择“连接 Mac 应用”，在 Chrome 提示时允许打开。
+[Chrome Web Store 项目](https://chromewebstore.google.com/detail/chrome-tab-router/iineonbhdnmadlkkmdcofakekmjpnkmn)当前仍为草稿，上架后可通过此地址安装。Mac 菜单栏“Chrome 扩展”中提供商店入口和本地测试安装方式。
+
+当前本地安装与测试步骤：
+
+1. 打开 Mac 应用。在 Chrome 打开 `chrome://extensions/`，开启开发者模式，点击“加载已解压的扩展程序”。
+2. 选择本项目的 `ChromeExtension` 目录、应用自带的扩展目录，或解压后的扩展 ZIP 目录；所选文件夹应直接包含 `manifest.json`。
+3. 本地开发版首次连接时，点击 Chrome 工具栏中的本扩展，选择“修复连接”，在 Chrome 提示时允许打开，并确认连接请求。
 4. 重新打开扩展弹窗，确认显示“已连接”。安装前已经打开的网页需要刷新一次以加载扩展脚本。
 
-连接过程会自动传递扩展 ID。Mac 应用仅为该 ID 注册本机 Native Messaging host。网页新标签页链接、Command 点击和鼠标中键点击可在创建标签页前交给 Mac 应用。地址栏、书签、右键菜单、表单、脚本调用 `window.open()` 及普通当前页跳转由 Chrome 处理。匹配和路由会切换到目标标签页。
+1.3.0 的 Mac 应用会在每次启动时自动登记正式扩展 ID；扩展在安装、Chrome 启动和打开弹窗时自动检测连接。先安装扩展、再安装 App 时，首次打开 App 后返回扩展弹窗或欢迎页，点击“重新检测”即可重试。主动连接开发版时，扩展会自动传递自己的 ID；Mac 应用同时保留正式 ID 和一个用户明确连接的开发版 ID，新开发版的连接请求需用户确认。无需复制 ID。
+
+菜单栏显示“自动连接已配置”或最近连接时间，扩展弹窗显示本次检测结果。连接需要修复时，可先在菜单栏选择“修复自动连接”，再从扩展弹窗点击“重新检测”；必要时使用“修复连接”并确认打开 App。
+
+网页新标签页链接、Command 点击和鼠标中键点击可在创建标签页前交给 Mac 应用。地址栏、书签、右键菜单、表单、脚本调用 `window.open()` 及普通当前页跳转由 Chrome 处理。匹配和路由会切换到目标标签页。
 
 只在支持扩展脚本的 HTTP/HTTPS 网页中运行；Chrome 内部页面和 Chrome Web Store 等受保护页面不支持。Mac 应用连接不可用时，扩展保留 Chrome 原有行为或尝试直接新开目标链接。
 
-正式发布准备见 [发布清单](distribution/release-checklist.md)、[商店文案](distribution/store-listing.md)和[隐私政策草稿](distribution/privacy-policy.md)。运行 `sh scripts/package-extension.sh` 可生成 ZIP；扩展 1.2.0 已上传商店草稿，尚未提交审核。使用问题可在 [GitHub Issues](https://github.com/wuruoye/chrome-tab-router/issues) 提交。
+正式发布准备见 [发布清单](distribution/release-checklist.md)、[商店填写材料](distribution/store-listing.md)和[隐私政策正文](distribution/privacy-policy.md)。运行 `sh scripts/package-extension.sh` 可生成 ZIP；商店现有草稿包为 1.2.0，最终 1.3.0 包仍待更新，尚未提交审核。
 
 ## 恢复与卸载
 

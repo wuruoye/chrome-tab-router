@@ -1,5 +1,40 @@
 import AppKit
 
+enum ChromeExtensionConnection {
+    static let storeID = "iineonbhdnmadlkkmdcofakekmjpnkmn"
+    static let storeURL = URL(string: "https://chromewebstore.google.com/detail/\(storeID)")!
+    static let guideURL = URL(string: "https://wuruoye.github.io/chrome-tab-router/")!
+    static let privacyURL = URL(string: "https://wuruoye.github.io/chrome-tab-router/privacy.html")!
+
+    static func isValidID(_ identifier: String) -> Bool {
+        identifier.range(of: "^[a-p]{32}$", options: .regularExpression) != nil
+    }
+
+    static func allowedIDs(developmentID: String? = nil) -> [String] {
+        var identifiers = [storeID]
+        let identifier = developmentID ?? UserDefaults.standard.string(forKey: "chromeExtensionID")
+        if let identifier, isValidID(identifier), identifier != storeID {
+            identifiers.append(identifier)
+        }
+        return identifiers
+    }
+}
+
+private func recordChromeContact() {
+    guard let origin = CommandLine.arguments.dropFirst().compactMap({ URL(string: $0) })
+        .first(where: { $0.scheme == "chrome-extension" }),
+          let identifier = origin.host,
+          ChromeExtensionConnection.allowedIDs().contains(identifier) else { return }
+    let preferences = UserDefaults.standard
+    let now = Date().timeIntervalSince1970
+    if now - preferences.double(forKey: "chromeExtensionLastContact") >= 15 ||
+        preferences.string(forKey: "chromeExtensionLastContactID") != identifier {
+        preferences.set(now, forKey: "chromeExtensionLastContact")
+        preferences.set(identifier, forKey: "chromeExtensionLastContactID")
+        preferences.synchronize()
+    }
+}
+
 func runNativeHost() {
     do {
         guard let header = try readExactly(4) else { exit(0) }
@@ -13,6 +48,7 @@ func runNativeHost() {
         switch request["action"] as? String {
         case "settings":
             try sendNativeResponse(["ok": true, "settings": RoutingSettings().json])
+            recordChromeContact()
         case "openSettings":
             let configuration = NSWorkspace.OpenConfiguration()
             configuration.activates = true
@@ -63,9 +99,19 @@ private func sendNativeResponse(_ response: [String: Any]) throws {
 }
 
 func connectExtension(_ identifier: String) throws {
-    guard identifier.range(of: "^[a-p]{32}$", options: .regularExpression) != nil else {
+    guard ChromeExtensionConnection.isValidID(identifier) else {
         throw RouterError(message: "扩展 ID 应为 Chrome 扩展页面显示的 32 位字母。", code: 0)
     }
+    if identifier == ChromeExtensionConnection.storeID {
+        try registerNativeHost()
+    } else {
+        try registerNativeHost(developmentID: identifier)
+        UserDefaults.standard.set(identifier, forKey: "chromeExtensionID")
+        UserDefaults.standard.synchronize()
+    }
+}
+
+func registerNativeHost(developmentID: String? = nil) throws {
     let directory = FileManager.default.homeDirectoryForCurrentUser
         .appendingPathComponent("Library/Application Support/Google/Chrome/NativeMessagingHosts", isDirectory: true)
     try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
@@ -74,11 +120,10 @@ func connectExtension(_ identifier: String) throws {
         "description": "Chrome Tab Router local link bridge",
         "path": Bundle.main.bundleURL.appendingPathComponent("Contents/Resources/NativeHost").path,
         "type": "stdio",
-        "allowed_origins": ["chrome-extension://\(identifier)/"]
+        "allowed_origins": ChromeExtensionConnection.allowedIDs(developmentID: developmentID)
+            .map { "chrome-extension://\($0)/" }
     ]
     let destination = directory.appendingPathComponent("com.sigma.chrome_tab_router.json")
     try JSONSerialization.data(withJSONObject: manifest, options: [.prettyPrinted, .sortedKeys]).write(to: destination, options: .atomic)
     try FileManager.default.setAttributes([.posixPermissions: 0o600], ofItemAtPath: destination.path)
-    UserDefaults.standard.set(identifier, forKey: "chromeExtensionID")
-    UserDefaults.standard.synchronize()
 }

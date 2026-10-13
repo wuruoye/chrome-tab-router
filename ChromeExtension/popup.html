@@ -5,23 +5,30 @@
   <title>Chrome Tab Router</title>
   <style>
     :root { color-scheme: light dark; }
-    body { width: 290px; margin: 0; padding: 20px; font: 13px -apple-system, BlinkMacSystemFont, sans-serif; }
+    body { width: 310px; margin: 0; padding: 20px; font: 13px -apple-system, BlinkMacSystemFont, sans-serif; }
     h1 { margin: 0 0 10px; font-size: 17px; }
     p { color: #777; line-height: 1.6; }
     .button { display: block; box-sizing: border-box; width: 100%; padding: 9px; border: 0; border-radius: 8px; background: #1d3557; color: white; text-align: center; text-decoration: none; cursor: pointer; }
-    #connect:not([hidden]) + #settings { margin-top: 8px; }
+    .actions { display: grid; gap: 8px; }
     .button.secondary { background: #e9edf2; color: #1d3557; }
+    .button:disabled { opacity: .5; cursor: wait; }
+    .privacy { margin-bottom: 0; font-size: 12px; }
+    a { color: #42699a; }
     [hidden] { display: none !important; }
     #state { font-weight: 600; }
   </style>
 </head>
 <body>
   <h1>Chrome Tab Router</h1>
-  <div id="state">正在连接 Mac 应用…</div>
+  <div id="state" role="status" aria-live="polite">正在检测 Mac 应用…</div>
   <p id="details">网页中的新标签页链接由 Mac 应用统一处理。</p>
-  <p>连接并开启接管后，你点击的新标签页链接会交给本机 Mac 应用。应用仅在本机查看 Chrome 已有标签页的网址；这些信息不会上传到开发者服务器。</p>
-  <a class="button" id="connect" hidden>连接 Mac 应用</a>
-  <a class="button secondary" id="settings" href="chrometabrouter://settings">打开 Mac 设置</a>
+  <div class="actions">
+    <a class="button" id="install-steps" href="https://github.com/wuruoye/chrome-tab-router/releases/download/v1.3.0/chrome-tab-router-mac-1.3.0-arm64.zip" target="_blank" rel="noopener">下载 Mac 应用 · Apple 芯片</a>
+    <button class="button secondary" id="retry" type="button">重新检测</button>
+    <a class="button secondary" id="settings" href="chrometabrouter://settings">打开 Mac 菜单</a>
+    <a class="button secondary" id="connect" hidden>修复连接</a>
+  </div>
+  <p class="privacy">接管链接时，完整链接 URL 与 Chrome 标签页 URL 仅在本机处理。开发者不上传这些 URL，也不将它们写入日志。<a href="https://wuruoye.github.io/chrome-tab-router/privacy.html" target="_blank" rel="noopener">隐私政策</a></p>
   <script src="popup.js"></script>
 </body>
 </html>

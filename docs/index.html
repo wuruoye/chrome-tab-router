@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Chrome Tab Router：打开重复链接时，回到已有的 Chrome 标签页。Mac 菜单栏设置、Chrome 扩展安装和验证说明。">
+  <title>Chrome Tab Router · 打开链接，回到已有页面</title>
+  <link rel="canonical" href="https://wuruoye.github.io/chrome-tab-router/">
+  <style>
+    :root { color-scheme: light; --ink: #203550; --muted: #66717d; --line: #e3e5e7; --paper: #faf9f6; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.8 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    main { width: min(100% - 40px, 880px); margin: 0 auto; padding: 38px 0 64px; }
+    nav { display: flex; flex-wrap: wrap; gap: 20px; font-size: 14px; margin-bottom: 58px; }
+    a { color: #294e78; text-underline-offset: 3px; overflow-wrap: anywhere; }
+    a:hover { color: #b94436; }
+    h1 { font-size: clamp(32px, 6vw, 52px); line-height: 1.23; margin: 0 0 22px; letter-spacing: -.035em; }
+    h2 { font-size: 25px; line-height: 1.4; margin: 0 0 18px; }
+    h3 { font-size: 18px; line-height: 1.45; margin: 0 0 10px; }
+    p { margin: 0 0 15px; }
+    .eyebrow { color: #b94436; font-weight: 650; font-size: 14px; margin-bottom: 14px; }
+    .lead { font-size: 19px; max-width: 700px; color: #536173; }
+    .buttons { display: flex; flex-wrap: wrap; gap: 12px; margin: 27px 0 14px; }
+    .button { display: inline-block; padding: 11px 18px; border-radius: 9px; background: var(--ink); color: white; text-decoration: none; font-size: 15px; font-weight: 600; }
+    .button:hover { color: white; background: #355271; }
+    .button.secondary { background: #e9edf1; color: var(--ink); }
+    .muted { color: var(--muted); font-size: 14px; }
+    section { border-top: 1px solid var(--line); margin-top: 43px; padding-top: 33px; }
+    ol, ul { padding-left: 24px; }
+    li { padding-left: 3px; margin: 0 0 12px; }
+    code { background: #edf0f3; border-radius: 4px; padding: 2px 5px; font-size: 13px; overflow-wrap: anywhere; }
+    .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 22px 0; }
+    .card { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 20px; }
+    .card .button { margin-top: 8px; width: 100%; text-align: center; }
+    .card p { color: var(--muted); font-size: 14px; }
+    footer { border-top: 1px solid var(--line); margin-top: 43px; padding-top: 22px; color: var(--muted); font-size: 14px; }
+    @media (max-width: 660px) { nav { margin-bottom: 40px; } .cards { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <main>
+    <nav aria-label="网站导航">
+      <a href="https://github.com/wuruoye/chrome-tab-router">源代码</a>
+      <a href="privacy.html">隐私政策</a>
+      <a href="https://github.com/wuruoye/chrome-tab-router/issues">联系与支持</a>
+    </nav>
+    <p class="eyebrow">Chrome Tab Router · macOS + Chrome</p>
+    <h1>打开重复链接，<br>回到已有标签页。</h1>
+    <p class="lead">已有匹配的网址时，切换过去，按设置刷新或更新链接；没有匹配时，打开新标签页。所有设置都在 Mac 菜单栏里。</p>
+    <div class="buttons">
+      <a class="button" href="https://github.com/wuruoye/chrome-tab-router/releases/download/v1.3.0/chrome-tab-router-mac-1.3.0-arm64.zip">下载 Mac 应用 · Apple 芯片</a>
+      <a class="button secondary" href="#install">安装说明</a>
+    </div>
+    <p class="muted">版本 1.3.0 · macOS 13 或更新版本 · Google Chrome。下载链接发布核验中。</p>
+
+    <section id="install">
+      <h2>安装与连接</h2>
+      <ol>
+        <li>下载并解压 Mac 应用，将 <code>Chrome Tab Router.app</code> 放入 <code>~/Applications</code>，然后打开。当前安装包尚未经过 Apple 公证；macOS 如阻止首次打开，可按照 <a href="https://support.apple.com/guide/mac-help/open-a-mac-app-from-an-unknown-developer-mh40616/mac">Apple 的说明</a>在“系统设置 → 隐私与安全性”中确认打开。</li>
+        <li>点击菜单栏中的应用图标。在“默认浏览器”中选择“设为默认浏览器”，即可接收外部应用打开的 HTTP/HTTPS 链接；Chrome 网页内部的新标签页链接还需要安装配套扩展。</li>
+        <li>扩展当前仍为商店草稿。测试时从 Mac 菜单栏“Chrome 扩展”中打开自带的扩展目录，在 Chrome 的 <code>chrome://extensions/</code> 开启开发者模式，选择“加载已解压的扩展程序”并选择该目录。也可使用 <a href="https://github.com/wuruoye/chrome-tab-router/releases/download/v1.3.0/chrome-tab-router-extension-1.3.0.zip">扩展 ZIP</a>，解压后选择包含 <code>manifest.json</code> 的文件夹。</li>
+        <li>正式扩展的本机连接由 Mac 应用每次启动时自动登记，扩展会在安装、Chrome 启动和打开弹窗时检测连接。先安装扩展、再安装 App 时，首次打开 App 后返回扩展弹窗或欢迎页，点击“重新检测”。本地开发版首次使用或修复连接时，在扩展弹窗点击“修复连接”，允许打开应用并确认连接请求，然后重新检测确认“已连接”。首次路由链接时，允许 Mac 应用控制 Google Chrome。</li>
+      </ol>
+      <p><a href="https://chromewebstore.google.com/detail/chrome-tab-router/iineonbhdnmadlkkmdcofakekmjpnkmn">Chrome Web Store 项目</a>在上架后可直接安装；当前还未提交审核。安装前已经打开的网页需刷新一次，让扩展脚本加载。</p>
+    </section>
+
+    <section id="settings">
+      <h2>在菜单栏调整行为</h2>
+      <p>可以暂停标签页复用、选择切换后是否刷新、是否更新为收到的新链接、是否查找所有 Chrome 窗口，以及登录时自动启动。扩展和 Mac 应用读取同一份设置，修改后自动保存。</p>
+      <ul>
+        <li>“网址匹配”：选择忽略页面锚点、常见跟踪参数或全部查询参数。路径始终参与匹配。</li>
+        <li>“例外网站”：添加、查看和删除域名。这些域名及其子域名每次新开标签页。</li>
+        <li>“Chrome 扩展”：查看自动连接配置和最近连接记录，选择“安装 Chrome 扩展…”或“修复自动连接”，以及打开扩展目录、安装说明和隐私政策。扩展弹窗显示本次检测是否已连接。</li>
+        <li>“默认浏览器”：设为默认浏览器，或恢复原来的默认浏览器。</li>
+      </ul>
+      <p class="muted">网页点击接管支持指向新标签页的链接、Command 点击和鼠标中键点击。Chrome 内部页面、Chrome Web Store、地址栏、书签、右键菜单、表单和脚本调用 window.open() 不在接管范围内。</p>
+    </section>
+
+    <section id="verify">
+      <h2>验证标签页复用</h2>
+      <p>先在菜单栏开启标签页复用、网页链接接管、切换后刷新、复用时更新为新链接和所有窗口查找。在“网址匹配”中开启忽略所有查询参数与页面锚点，例外网站保持为空。下面三个链接均使用 <code>target="_blank"</code>。</p>
+      <div class="cards">
+        <article class="card">
+          <h3>1. 打开基准页面</h3>
+          <p>打开 example.com 的第一个地址。它将作为可复用的标签页。</p>
+          <a class="button" href="https://example.com/?tab_router_demo=1#first" target="_blank" rel="noopener">打开第一个链接</a>
+        </article>
+        <article class="card">
+          <h3>2. 更新原标签页</h3>
+          <p>返回本页，再点击此链接。预期切回原标签页并更新参数，标签页总数保持不变。</p>
+          <a class="button" href="https://example.com/?tab_router_demo=2#second" target="_blank" rel="noopener">打开第二个链接</a>
+        </article>
+        <article class="card">
+          <h3>3. 打开不同网址</h3>
+          <p>确保没有 example.org 的标签页。点击后预期新开一个标签页。</p>
+          <a class="button" href="https://example.org/?tab_router_demo=3" target="_blank" rel="noopener">打开第三个链接</a>
+        </article>
+      </div>
+      <p class="muted">对第二个链接使用 Command 点击或鼠标中键，也可验证复用。关闭网页链接接管，或把 example.com 加入例外网站后，发往该域名的链接会由 Chrome 正常新开。</p>
+    </section>
+
+    <footer>由 <a href="https://github.com/wuruoye">wuruoye</a> 维护。浏览网址只在用户设备上处理，详情见 <a href="privacy.html">隐私政策</a>。问题反馈：<a href="https://github.com/wuruoye/chrome-tab-router/issues">GitHub Issues</a>。</footer>
+  </main>
+</body>
+</html>

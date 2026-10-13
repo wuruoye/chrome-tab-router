@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>欢迎使用 Chrome Tab Router</title>
+  <style>
+    :root { color-scheme: light; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #1d3557; background: #f7f4eb; }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 48px 24px; }
+    main { max-width: 620px; margin: 0 auto; background: #fff; border: 1px solid #e7e4dc; border-radius: 24px; padding: 40px; box-shadow: 0 12px 40px #1d35570a; }
+    .brand { display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 16px; }
+    .brand img { width: 48px; height: 48px; }
+    h1 { font-size: 30px; line-height: 1.3; margin: 24px 0 12px; }
+    p, li { line-height: 1.75; color: #5c6571; }
+    .connection { margin-top: 24px; padding: 20px; background: #f4f6f8; border-radius: 12px; }
+    #state { font-weight: 600; }
+    #details { margin-bottom: 0; }
+    ol { padding-left: 22px; }
+    .actions { display: grid; gap: 10px; margin-top: 24px; }
+    .button { display: block; padding: 12px 16px; border: 0; border-radius: 10px; background: #1d3557; color: #fff; font: inherit; text-align: center; text-decoration: none; cursor: pointer; }
+    .button.secondary { background: #edf0f4; color: #1d3557; }
+    .button:disabled { opacity: .5; cursor: wait; }
+    .privacy { margin-top: 24px; padding-top: 20px; border-top: 1px solid #e8ebee; font-size: 13px; }
+    a { color: #42699a; }
+    [hidden] { display: none !important; }
+    @media (max-width: 480px) { body { padding: 20px 12px; } main { padding: 24px; } h1 { font-size: 26px; } }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="brand"><img src="icons/icon128.png" alt="">Chrome Tab Router</div>
+    <h1>重复链接，回到原标签页</h1>
+    <p>扩展将网页中准备打开新标签页的链接交给 Mac 应用，找到已有页面后切换过去。刷新、网址匹配和例外网站都在 Mac 菜单栏设置。</p>
+    <div class="connection">
+      <div id="state" role="status" aria-live="polite">正在检测 Mac 应用…</div>
+      <p id="details">安装过 Mac 应用时，会自动读取菜单栏中的设置。</p>
+    </div>
+    <div id="install-steps">
+      <ol>
+        <li>下载 Mac 应用，解压后放入“应用程序”文件夹。</li>
+        <li>首次打开一次 App。它会自动配置扩展连接，菜单栏中会出现循环箭头图标。</li>
+        <li>返回本页，点击“重新检测”。先安装扩展、再安装 App 也可以，无需重新安装扩展。</li>
+      </ol>
+      <a class="button" href="https://github.com/wuruoye/chrome-tab-router/releases/download/v1.3.0/chrome-tab-router-mac-1.3.0-arm64.zip" target="_blank" rel="noopener">下载 Mac 应用 · Apple 芯片</a>
+      <p>适用于 Apple 芯片 Mac，macOS 13 或更高版本。</p>
+    </div>
+    <div class="actions">
+      <button class="button secondary" id="retry" type="button">重新检测</button>
+      <a class="button secondary" id="settings" href="chrometabrouter://settings">打开 Mac 菜单</a>
+      <a class="button secondary" id="connect" hidden>修复连接</a>
+    </div>
+    <p class="privacy">接管链接时，完整链接 URL 与 Chrome 标签页 URL 仅在本机处理。开发者不上传这些 URL，也不将它们写入日志。所有设置与 Mac 应用自动共用。<a href="https://wuruoye.github.io/chrome-tab-router/privacy.html" target="_blank" rel="noopener">查看隐私政策</a></p>
+  </main>
+  <script src="popup.js"></script>
+</body>
+</html>

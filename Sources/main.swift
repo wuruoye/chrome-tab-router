@@ -10,7 +10,7 @@ if CommandLine.arguments.contains("--native-host") { runNativeHost() }
 if let index = CommandLine.arguments.firstIndex(of: "--connect-extension"), CommandLine.arguments.count > index + 1 {
     do {
         try connectExtension(CommandLine.arguments[index + 1])
-        print("Chrome 扩展已连接。")
+        print("Chrome 扩展本地连接配置已更新。")
         exit(0)
     } catch { fputs("\(error)\n", stderr); exit(1) }
 }
@@ -42,6 +42,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     private var extensionMenuItem: NSMenuItem?
     private var exclusionsMenu: NSMenu?
     private var menuRequested = false
+    private var extensionConfigurationError: String?
     private var pendingURLs: [URL] = []
     private var isRouting = false
     private var isChangingDefault = false
@@ -57,6 +58,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     }
 
     func applicationDidFinishLaunching(_ notification: Notification) {
+        do { try registerNativeHost() }
+        catch { extensionConfigurationError = error.localizedDescription }
         buildMenu()
         if CommandLine.arguments.contains("--setup") || menuRequested {
             menuRequested = false
@@ -90,17 +93,19 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
                     guard identifier.range(of: "^[a-p]{32}$", options: .regularExpression) != nil else {
                         throw RouterError(message: "扩展连接请求中的 ID 无效。", code: 0)
                     }
-                    if let previous = preferences.string(forKey: "chromeExtensionID"), previous != identifier {
+                    if identifier != ChromeExtensionConnection.storeID,
+                       preferences.string(forKey: "chromeExtensionID") != identifier {
                         let alert = NSAlert()
-                        alert.messageText = "更换 Chrome 扩展连接？"
-                        alert.informativeText = "继续后会连接这次发起请求的扩展，原扩展将断开。请确认你刚刚在 Chrome Tab Router 扩展弹窗中点击了连接。\n\n原扩展：\(previous)\n新扩展：\(identifier)"
-                        alert.addButton(withTitle: "更换连接")
+                        alert.messageText = "连接此开发版扩展？"
+                        alert.informativeText = "请确认你刚刚在 Chrome Tab Router 扩展弹窗中点击了修复连接。商店扩展会保持自动连接。\n\n开发版扩展 ID：\(identifier)"
+                        alert.addButton(withTitle: "连接")
                         alert.addButton(withTitle: "取消")
                         NSApp.activate(ignoringOtherApps: true)
                         guard alert.runModal() == .alertFirstButtonReturn else { return }
                     }
                     try connectExtension(identifier)
-                    lastResult = "Chrome 扩展已连接，请重新打开扩展弹窗确认。"
+                    extensionConfigurationError = nil
+                    lastResult = "本地连接已配置，请在扩展弹窗中重新检测。"
                     showMenu(nil)
                 } catch {
                     showMessage("扩展连接未完成", (error as? RouterError)?.message ?? error.localizedDescription)
@@ -219,8 +224,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         restoreMenuItem = addItem("恢复原来的默认浏览器", action: #selector(restoreDefault(_:)), to: browser)
         let chromeExtension = addSubmenu("Chrome 扩展", to: menu)
         extensionMenuItem = addLabel("", to: chromeExtension)
+        addItem("安装 Chrome 扩展…", action: #selector(installChromeExtension(_:)), to: chromeExtension)
+        addItem("修复自动连接", action: #selector(repairChromeExtension(_:)), to: chromeExtension)
         addItem("打开扩展目录…", action: #selector(openExtensionDirectory(_:)), to: chromeExtension)
         addItem("安装与连接说明…", action: #selector(connectChromeExtension(_:)), to: chromeExtension)
+        addItem("隐私政策…", action: #selector(openPrivacyPolicy(_:)), to: chromeExtension)
         addItem("打开 Chrome 自动化权限设置…", action: #selector(openAutomationSettings(_:)), to: menu)
         addItem("打开剪贴板中的链接", action: #selector(openClipboard(_:)), to: menu)
         menu.addItem(.separator())
@@ -271,6 +279,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     }
 
     private func updateStatus() {
+        preferences.synchronize()
         let ownID = Bundle.main.bundleIdentifier
         let isDefault = supportedSchemes.allSatisfy { handlerID(for: $0) == ownID }
         statusMenuItem?.title = isDefault ? "已设为系统默认浏览器" : "尚未设为系统默认浏览器"
@@ -281,9 +290,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         for (key, item) in settingMenuItems { item.state = settings[key] ? .on : .off }
         settingMenuItems["ignoreTrackingParameters"]?.isEnabled = !settings["ignoreQueryParameters"]
         loginMenuItem?.state = [.enabled, .requiresApproval].contains(SMAppService.mainApp.status) ? .on : .off
-        extensionMenuItem?.title = preferences.string(forKey: "chromeExtensionID") == nil
-            ? "尚未登记扩展连接" : "扩展连接已登记"
-        extensionMenuItem?.toolTip = "在 Chrome 扩展弹窗中确认是否显示“已连接”。"
+        if extensionConfigurationError != nil {
+            extensionMenuItem?.title = "自动连接需要修复"
+        } else if preferences.double(forKey: "chromeExtensionLastContact") > 0 {
+            let formatter = DateFormatter()
+            formatter.timeStyle = .short
+            let contact = Date(timeIntervalSince1970: preferences.double(forKey: "chromeExtensionLastContact"))
+            extensionMenuItem?.title = "自动连接已配置 · 上次连接 \(formatter.string(from: contact))"
+        } else {
+            extensionMenuItem?.title = "自动连接已配置"
+        }
+        extensionMenuItem?.toolTip = "商店扩展安装后会自动连接。可在 Chrome 扩展弹窗中重新检测。"
         updateExclusionsMenu(settings.excludedDomains)
     }
 
@@ -362,10 +379,47 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
     @objc private func connectChromeExtension(_ sender: Any?) {
         let alert = NSAlert()
-        alert.messageText = "连接 Chrome 扩展"
-        alert.informativeText = "先在 Chrome 的扩展管理页开启开发者模式，加载配套扩展目录。然后点击 Chrome 工具栏中的本扩展，选择“连接 Mac 应用”并允许打开。扩展会自动完成连接。"
+        alert.messageText = "安装 Chrome 扩展"
+        alert.informativeText = "先打开 Mac 应用，再从菜单栏选择“Chrome 扩展 → 安装 Chrome 扩展”。在 Chrome 确认安装后，扩展会自动连接并共用菜单栏设置。\n\n商店版本尚未发布时，可在 Chrome 的扩展管理页加载本地扩展目录。开发版连接需要从扩展弹窗点击“修复连接”。\n\n连接异常时，先选择菜单栏“修复自动连接”，再在扩展中点击“重新检测”。"
+        alert.addButton(withTitle: "查看安装说明")
         alert.addButton(withTitle: "好")
-        alert.runModal()
+        NSApp.activate(ignoringOtherApps: true)
+        if alert.runModal() == .alertFirstButtonReturn {
+            openDirectlyInChrome(ChromeExtensionConnection.guideURL)
+        }
+    }
+
+    @objc private func installChromeExtension(_ sender: Any?) {
+        guard NSWorkspace.shared.urlForApplication(withBundleIdentifier: chromeBundleID) != nil else {
+            showMessage("需要 Google Chrome", "请先安装 Google Chrome，再从这里安装配套扩展。")
+            return
+        }
+        do {
+            try registerNativeHost()
+            extensionConfigurationError = nil
+            updateStatus()
+            openDirectlyInChrome(ChromeExtensionConnection.storeURL)
+        } catch {
+            extensionConfigurationError = error.localizedDescription
+            updateStatus()
+            showMessage("自动连接未配置完成", error.localizedDescription)
+        }
+    }
+
+    @objc private func repairChromeExtension(_ sender: Any?) {
+        do {
+            try registerNativeHost()
+            extensionConfigurationError = nil
+            lastResult = "自动连接配置已更新，请在扩展中重新检测。"
+        } catch {
+            extensionConfigurationError = error.localizedDescription
+            showMessage("自动连接未配置完成", error.localizedDescription)
+        }
+        updateStatus()
+    }
+
+    @objc private func openPrivacyPolicy(_ sender: Any?) {
+        openDirectlyInChrome(ChromeExtensionConnection.privacyURL)
     }
 
     @objc private func makeDefault(_ sender: Any?) {
