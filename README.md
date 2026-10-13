@@ -7,6 +7,7 @@
 - 默认按完整 URL 匹配。域名和协议转为小写，省略默认端口，并补齐根路径的 `/`；路径始终参与匹配。
 - 多个窗口中都有相同网址时，优先选择靠前的窗口及其当前标签页。
 - 链接顺序处理，避免连续打开同一链接时重复创建标签页。
+- App 独立记录自己打开的链接原始地址和最终地址；配套扩展补充 Chrome 内部导航及完整的重定向链。再次打开已记录的地址可复用当前标签页，普通页面跳转和关闭标签页会清理旧记录。
 - 所有设置均从菜单栏访问，同时提供打开剪贴板链接和退出。
 - 菜单栏显示默认浏览器状态，提供设为默认浏览器和恢复原默认浏览器的操作。
 
@@ -31,12 +32,16 @@
 
 例如启用“忽略所有查询参数”“忽略页面锚点”和“复用时更新为新链接”后，先打开[本项目同路径示例 id=1](https://wuruoye.github.io/chrome-tab-router/demo/reuse.html?id=1#first)，再打开[同路径示例 id=2](https://wuruoye.github.io/chrome-tab-router/demo/reuse.html?id=2#second)，会保留原标签页并载入 `id=2` 的页面。参数变化产生一次导航加载；仅锚点变化时，按刷新开关决定是否重新载入。关闭“复用时更新为新链接”后，匹配到的标签页保留原地址。
 
+1.3.1 增加当前页面的重定向记录。例如网址经过 `A → B → C`，以后打开 `A`、`B` 或 `C` 都会按已有匹配、刷新和更新设置复用当前标签页，无需网站专用规则。记录只包含当前主页面这次导航经过的 HTTP/HTTPS 地址，普通跳转和单页应用切换会替换记录；刷新同一页面会保留已知重定向入口。扩展启用前或浏览器重启后没有记录的页面，需要重新经过一次跳转才能学习。隐身标签页的记录不发送给 Mac 应用。
+
+1.3.2 的 Mac App 可以独立完成外部链接处理。App 跟踪实际打开或更新的标签页 ID，读取 Chrome 的加载状态和最终地址，保存原始地址与最终地址；连续打开正在加载的同一链接会复用该标签页。查找窗口、刷新、参数与锚点更新、例外网站、暂停及剪贴板打开都由 App 执行，没有扩展也可使用。扩展仅补充 Chrome 网页内部的新标签页点击和浏览器导航事件。App 独立采集时无法保证捕获快速经过的所有中间地址，也无法补齐它启用前已经打开的页面的跳转历史。
+
 ## 下载与安装
 
-[1.3.0 预览版](https://github.com/wuruoye/chrome-tab-router/releases/tag/v1.3.0)已公开发布，以下安装包和 Pages 页面已于 2026-10-13 完成发布核验。
+[1.3.2 预览版](https://github.com/wuruoye/chrome-tab-router/releases/tag/v1.3.2)包含 App 独立重定向记录与配套扩展的当前页面重定向记录。
 
-- [Mac 应用 · Apple 芯片](https://github.com/wuruoye/chrome-tab-router/releases/download/v1.3.0/chrome-tab-router-mac-1.3.0-arm64.zip)
-- [Chrome 扩展 ZIP](https://github.com/wuruoye/chrome-tab-router/releases/download/v1.3.0/chrome-tab-router-extension-1.3.0.zip)
+- [Mac 应用 · Apple 芯片](https://github.com/wuruoye/chrome-tab-router/releases/download/v1.3.2/chrome-tab-router-mac-1.3.2-arm64.zip)
+- [Chrome 扩展 ZIP](https://github.com/wuruoye/chrome-tab-router/releases/download/v1.3.2/chrome-tab-router-extension-1.3.2.zip)
 - [官方网站与安装验证](https://ruoye.site/chrome-tab-router/)
 - [隐私政策](https://ruoye.site/chrome-tab-router/privacy.html)
 - [GitHub Pages 镜像](https://wuruoye.github.io/chrome-tab-router/)
@@ -90,6 +95,10 @@ zsh scripts/install.sh
 本机消息注册文件位于 `~/Library/Application Support/Google/Chrome/NativeMessagingHosts/com.sigma.chrome_tab_router.json`，卸载时可一并删除。偏好设置的域为 `com.sigma.ChromeTabRouter`；需要清理时可运行 `defaults delete com.sigma.ChromeTabRouter`，并删除下面的日志目录。
 
 偏好设置保存在应用自己的 UserDefaults 中。运行记录保存在 `~/Library/Logs/ChromeTabRouter/events.log`，仅包含时间和动作，不记录 URL 或网页内容。
+
+当前页面的重定向记录保存在扩展的会话内存中，并通过权限为 `0600` 的 `~/Library/Caches/ChromeTabRouter/Navigation/` 文件供 Mac 应用读取；关闭标签页或普通页面跳转时更新记录，Mac 应用运行时检测到 Chrome 退出会清理这些文件。记录绑定 Chrome 本次进程及启动时间，重启后的旧记录不会参与匹配。卸载时可同时删除此缓存目录。
+
+App 自己采集的当前页面记录位于上述目录的 `app.json`，可在 App 重启后继续使用；匹配时会再次核对 Chrome 本次进程、标签页 ID 和当前网址。App 只跟踪自己发起导航的标签页，页面跳转或关闭后清理记录；隐身窗口记录只在 App 内存中使用，不写入该文件。
 
 可用以下命令检查 http / https 的系统默认处理应用：
 

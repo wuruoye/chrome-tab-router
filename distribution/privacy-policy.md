@@ -18,6 +18,10 @@ Mac 应用在用户设备上读取 Chrome 当前打开的标签页 URL，与目�
 
 ## 存储、共享与保留
 
+1.3.2 的 Mac 应用独立跟踪自己打开或更新的标签页，读取该标签页的加载状态和最终 URL，并将原始 URL 与最终 URL 保存在 `~/Library/Caches/ChromeTabRouter/Navigation/app.json`。这项功能不依赖扩展，也不发送额外探测请求。App 只跟踪自己发起导航的标签页，普通页面跳转和关闭后清理当前记录；匹配时再次核对 Chrome 本次进程、标签页 ID 与当前网址。隐身窗口记录只在 App 内存中使用，不写入该文件。App 不保证捕获快速经过的所有中间跳转地址。
+
+1.3.1 的扩展监听当前主页面的导航和服务器重定向地址，为每个标签页保存当前页面经过的完整 URL。普通页面跳转会替换这份记录，关闭标签页会删除记录；它不会保存标签页过去访问的所有页面。扩展的记录保存在 Chrome 会话内存中，重载扩展或重启 Chrome 后清空。为使外部应用打开的链接也能复用标签页，扩展通过 Native Messaging 将当前重定向记录发送给本机 Mac 应用，写入仅当前用户可访问的 `~/Library/Caches/ChromeTabRouter/Navigation/`。缓存按标签页关闭和导航更新，Mac 应用运行时检测到 Chrome 退出会清理；旧 Chrome 进程的记录不再参与匹配。隐身标签页记录不发送给 Mac 应用。这些地址不上传、不写入操作日志，也不用于浏览历史分析。
+
 目标 URL 和用于比较的现有标签页 URL 由本机程序临时处理，不写入 Chrome Tab Router 的操作日志。Mac 应用在本机保存功能设置、排除域名、连接所需的扩展 ID，以及用于恢复默认浏览器的原应用标识。本机连接状态还保存最近发起通信的扩展 ID 和最近连接时间，用于菜单栏显示最近连接记录；这不表示扩展持续在线。本机操作日志仅记录时间和动作名称。设置、连接文件和操作日志会保留在用户设备上，直到用户主动清理。应用不建立浏览网址历史。
 
 卸载前可在菜单栏关闭登录启动并恢复原来的默认浏览器，随后退出应用、删除应用和 Chrome 扩展。需要清理本机数据时，可删除 `~/Library/Application Support/Google/Chrome/NativeMessagingHosts/com.sigma.chrome_tab_router.json`，运行 `defaults delete com.sigma.ChromeTabRouter`，并删除 `~/Library/Logs/ChromeTabRouter/`。这些步骤清理的是本应用的本机设置、连接文件和操作日志。
@@ -27,6 +31,8 @@ Mac 应用在用户设备上读取 Chrome 当前打开的标签页 URL，与目�
 ## 权限
 
 `nativeMessaging` 允许扩展与用户设备上的 Mac 应用通信，完成链接路由及设置读取。网页脚本在 HTTP/HTTPS 网页及其框架中运行，才能识别用户请求新标签页的链接；Chrome 内部页面和 Chrome Web Store 等受保护页面不支持这些脚本。Mac 应用需要 macOS 的 Chrome 自动化权限，才能读取并切换已打开的标签页。
+
+1.3.1 使用 `webNavigation` 识别主页面导航、页面脚本重定向和普通页面切换，使用 `webRequest` 及 HTTP/HTTPS 主机权限观察主页面服务器重定向的前后 URL，使用 `storage` 在扩展会话内存中保存当前页面记录。监听只处理主页面地址，不读取请求正文、响应正文、Cookie 或认证信息，不拦截网络请求。
 
 ## 公开页面与支持渠道
 

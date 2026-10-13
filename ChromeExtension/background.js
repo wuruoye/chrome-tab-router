@@ -1,4 +1,5 @@
 const host = "com.sigma.chrome_tab_router";
+importScripts("navigation.js");
 
 async function showConnectionStatus(connected) {
   // A badge failure must not retry a link that the Mac application has already accepted.
@@ -30,9 +31,16 @@ async function nativeRequest(request) {
 }
 
 async function probeConnection() {
-  try { return await nativeRequest({ action: "settings" }); }
+  try {
+    const response = await nativeRequest({ action: "settings" });
+    if (response.navigationTracking) await navigationRecords.flush().catch(() => {});
+    return response;
+  }
   catch (error) { return connectionFailure(error); }
 }
+
+const navigationRecords = new TabNavigationRecords(entries =>
+  nativeRequest({ action: "navigation", entries }));
 
 chrome.runtime.onInstalled.addListener(details => {
   void probeConnection();
@@ -60,6 +68,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     const url = new URL(message.url);
     if (!["http:", "https:"].includes(url.protocol)) return { ok: false };
     try {
+      // Wait for navigation events already received before the App compares any tabs.
+      await navigationRecords.flush().catch(() => {});
       const response = await nativeRequest({ action: "route", url: url.href });
       return response;
     } catch {

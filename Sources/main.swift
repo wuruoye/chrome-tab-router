@@ -58,6 +58,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     }
 
     func applicationDidFinishLaunching(_ notification: Notification) {
+        NSWorkspace.shared.notificationCenter.addObserver(
+            self, selector: #selector(browserTerminated(_:)),
+            name: NSWorkspace.didTerminateApplicationNotification, object: nil
+        )
         do { try registerNativeHost() }
         catch { extensionConfigurationError = error.localizedDescription }
         buildMenu()
@@ -76,6 +80,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
         showMenu(nil)
         return true
+    }
+
+    @objc private func browserTerminated(_ notification: Notification) {
+        if (notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication)?
+            .bundleIdentifier == chromeBundleID {
+            routingEngine.browserTerminated()
+            TabNavigationCache.clear()
+        }
     }
 
     func menuNeedsUpdate(_ menu: NSMenu) {

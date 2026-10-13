@@ -40,15 +40,22 @@ func runNativeHost() {
         guard let header = try readExactly(4) else { exit(0) }
         let bytes = Array(header)
         let length = Int(UInt32(bytes[0]) | UInt32(bytes[1]) << 8 | UInt32(bytes[2]) << 16 | UInt32(bytes[3]) << 24)
-        guard length > 0, length <= 65536, let payload = try readExactly(length),
+        guard length > 0, length <= 1048576, let payload = try readExactly(length),
               let request = try JSONSerialization.jsonObject(with: payload) as? [String: Any] else {
             try sendNativeResponse(["ok": false, "error": "请求格式不正确。"])
             exit(0)
         }
         switch request["action"] as? String {
         case "settings":
-            try sendNativeResponse(["ok": true, "settings": RoutingSettings().json])
+            try sendNativeResponse(["ok": true, "settings": RoutingSettings().json, "navigationTracking": true])
             recordChromeContact()
+        case "navigation":
+            guard let origin = CommandLine.arguments.dropFirst().compactMap({ URL(string: $0) })
+                .first(where: { $0.scheme == "chrome-extension" }), let identifier = origin.host else {
+                throw RouterError(message: "导航记录来源不正确。", code: 0)
+            }
+            try TabNavigationCache.save(request["entries"], sourceID: identifier)
+            try sendNativeResponse(["ok": true])
         case "openSettings":
             let configuration = NSWorkspace.OpenConfiguration()
             configuration.activates = true

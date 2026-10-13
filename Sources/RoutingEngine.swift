@@ -3,6 +3,16 @@ import Carbon
 
 final class RoutingEngine {
     private var script: NSAppleScript?
+    private lazy var appNavigation = AppNavigationRecords { [weak self] identifiers in
+        guard let self else { return [] }
+        let ids = NSAppleEventDescriptor.list()
+        for (index, identifier) in identifiers.sorted().enumerated() {
+            ids.insert(NSAppleEventDescriptor(string: String(identifier)), at: index + 1)
+        }
+        return self.tabs(from: try self.invoke("trackedtabsnapshot", [ids]))
+    }
+
+    func browserTerminated() { appNavigation.clear() }
 
     func route(_ url: URL) throws -> String {
         guard NSWorkspace.shared.urlForApplication(withBundleIdentifier: "com.google.Chrome") != nil else {
@@ -10,34 +20,65 @@ final class RoutingEngine {
         }
         let settings = RoutingSettings()
         if settings["enabled"] && !settings.excludes(url) {
-            let snapshot = try invoke("tabsnapshot", [])
+            let snapshot = tabs(from: try invoke("tabsnapshot", []))
             let key = settings.normalized(url)
-            for index in 1...max(1, snapshot.numberOfItems) {
-                guard snapshot.numberOfItems >= index,
-                      let record = snapshot.atIndex(index),
-                      let window = record.atIndex(1),
-                      let tab = record.atIndex(2),
-                      let value = record.atIndex(3)?.stringValue,
-                      let candidate = URL(string: value) else { continue }
-                if !settings["searchAllWindows"] && record.atIndex(4)?.booleanValue != true { continue }
-                if settings.normalized(candidate) == key {
-                    let updateURL = settings["useIncomingURL"] && candidate.absoluteString != url.absoluteString
+            let navigationEntries = appNavigation.entries(in: snapshot) + TabNavigationCache.entries()
+            for tab in snapshot {
+                let candidate = tab.url
+                if !settings["searchAllWindows"] && !tab.frontWindow { continue }
+                let redirectMatch = navigationEntries.contains { entry in
+                    entry.tabID == tab.tabID && entry.windowID == tab.windowID &&
+                    entry.url == candidate.absoluteString && entry.aliases.contains { raw in
+                        guard let address = URL(string: raw), !settings.excludes(address) else { return false }
+                        return settings.normalized(address) == key
+                    }
+                }
+                if !settings.excludes(candidate) && (settings.normalized(candidate) == key || redirectMatch) {
+                    let inFlight = appNavigation.isOpening(tab, requestedURL: url)
+                    let updateURL = !inFlight && settings["useIncomingURL"] && candidate.absoluteString != url.absoluteString
                     var oldPage = URLComponents(url: candidate, resolvingAgainstBaseURL: false)
                     var newPage = URLComponents(url: url, resolvingAgainstBaseURL: false)
                     oldPage?.fragment = nil
                     newPage?.fragment = nil
                     // A changed query loads the document through navigation. A fragment change needs an explicit reload.
                     let navigationLoadsPage = updateURL && oldPage?.string != newPage?.string
-                    let reload = settings["refreshReusedTabs"] && !navigationLoadsPage
-                    _ = try invoke("focustab", [window, tab, NSAppleEventDescriptor(string: url.absoluteString),
-                                               NSAppleEventDescriptor(boolean: updateURL), NSAppleEventDescriptor(boolean: reload)])
+                    let reload = !inFlight && settings["refreshReusedTabs"] && !navigationLoadsPage
+                    let focused = try invoke("focustab", [NSAppleEventDescriptor(int32: Int32(tab.windowID)),
+                        NSAppleEventDescriptor(string: String(tab.tabID)), NSAppleEventDescriptor(string: url.absoluteString),
+                        NSAppleEventDescriptor(boolean: updateURL), NSAppleEventDescriptor(boolean: reload)])
+                    if (updateURL || reload), let state = tabState(from: focused) {
+                        let retained = reload ? navigationEntries.filter {
+                            $0.tabID == tab.tabID && $0.url == candidate.absoluteString
+                        }.flatMap(\.aliases) : []
+                        appNavigation.track(state, requestedURL: updateURL ? url : candidate, retaining: retained)
+                    }
                     if updateURL { return "reused-updated" }
-                    return settings["refreshReusedTabs"] ? "reused-refreshed" : "reused"
+                    return reload ? "reused-refreshed" : "reused"
                 }
             }
         }
-        _ = try invoke("opennewtab", [NSAppleEventDescriptor(string: url.absoluteString)])
+        let opened = try invoke("opennewtab", [NSAppleEventDescriptor(string: url.absoluteString)])
+        if let tab = tabState(from: opened) { appNavigation.track(tab, requestedURL: url) }
         return "opened"
+    }
+
+    private func tabs(from descriptor: NSAppleEventDescriptor) -> [ChromeTabState] {
+        guard descriptor.numberOfItems > 0 else { return [] }
+        return (1...descriptor.numberOfItems).compactMap { index in
+            descriptor.atIndex(index).flatMap(tabState)
+        }
+    }
+
+    private func tabState(from record: NSAppleEventDescriptor) -> ChromeTabState? {
+        guard let window = record.atIndex(1), let tab = record.atIndex(2),
+              let value = record.atIndex(3)?.stringValue, let url = URL(string: value),
+              ["http", "https"].contains(url.scheme?.lowercased() ?? ""), url.host != nil else { return nil }
+        let windowID = window.stringValue.flatMap(Int.init) ?? Int(window.int32Value)
+        let tabID = tab.stringValue.flatMap(Int.init) ?? Int(tab.int32Value)
+        return ChromeTabState(windowID: windowID, tabID: tabID, url: url,
+                              frontWindow: record.atIndex(4)?.booleanValue == true,
+                              loading: record.atIndex(5)?.booleanValue == true,
+                              incognito: record.atIndex(6)?.stringValue == "incognito")
     }
 
     private func invoke(_ handler: String, _ arguments: [NSAppleEventDescriptor]) throws -> NSAppleEventDescriptor {
