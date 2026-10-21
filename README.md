@@ -41,7 +41,8 @@
 [1.3.2 预览版](https://github.com/wuruoye/chrome-tab-router/releases/tag/v1.3.2)包含 App 独立重定向记录与配套扩展的当前页面重定向记录。
 
 - [Mac 应用 · Apple 芯片](https://github.com/wuruoye/chrome-tab-router/releases/download/v1.3.2/chrome-tab-router-mac-1.3.2-arm64.zip)
-- [Chrome 扩展 ZIP](https://github.com/wuruoye/chrome-tab-router/releases/download/v1.3.2/chrome-tab-router-extension-1.3.2.zip)
+- [Chrome 扩展 · 商店版（推荐）](https://chromewebstore.google.com/detail/chrome-tab-router/iineonbhdnmadlkkmdcofakekmjpnkmn)
+- [Chrome 扩展 ZIP · 仅供开发和测试侧载](https://github.com/wuruoye/chrome-tab-router/releases/download/v1.3.2/chrome-tab-router-extension-1.3.2.zip)
 - [官方网站与安装验证](https://ruoye.site/chrome-tab-router/)
 - [隐私政策](https://ruoye.site/chrome-tab-router/privacy.html)
 - [GitHub Pages 镜像](https://wuruoye.github.io/chrome-tab-router/)
@@ -67,9 +68,9 @@ zsh scripts/install.sh
 
 外部应用打开的链接由 Mac 应用接收。Chrome 网页内部打开新标签页的链接需要配套扩展。
 
-[Chrome Web Store 项目](https://chromewebstore.google.com/detail/chrome-tab-router/iineonbhdnmadlkkmdcofakekmjpnkmn)当前审核版本为 1.3.2，审核通过后手动发布；上架后可通过此地址安装。Mac 菜单栏“Chrome 扩展”中提供商店入口和本地测试安装方式。
+[Chrome Web Store 商店版 1.3.2](https://chromewebstore.google.com/detail/chrome-tab-router/iineonbhdnmadlkkmdcofakekmjpnkmn)已公开，可直接安装。请先安装并打开 Mac 应用，再从商店页面点击“添加至 Chrome”；也可从 Mac 菜单栏“Chrome 扩展”打开商店入口。安装后打开扩展弹窗，确认“已连接”；安装前已打开的网页需要刷新一次以加载扩展脚本。
 
-当前本地安装与测试步骤：
+以下 ZIP 或源码侧载步骤仅供开发和测试；日常使用请优先安装商店版：
 
 1. 打开 Mac 应用。在 Chrome 打开 `chrome://extensions/`，开启开发者模式，点击“加载已解压的扩展程序”。
 2. 选择本项目的 `ChromeExtension` 目录、应用自带的扩展目录，或解压后的扩展 ZIP 目录；所选文件夹应直接包含 `manifest.json`。
@@ -87,6 +88,8 @@ zsh scripts/install.sh
 只在支持扩展脚本的 HTTP/HTTPS 网页中运行；Chrome 内部页面和 Chrome Web Store 等受保护页面不支持。Mac 应用连接不可用时，扩展保留 Chrome 原有行为或尝试直接新开目标链接。
 
 发布资料见 [发布清单](distribution/release-checklist.md)、[商店填写材料](distribution/store-listing.md)和[隐私政策正文](distribution/privacy-policy.md)。运行 `sh scripts/package-extension.sh` 可生成 ZIP。2026-10-13 已发布 1.3.2 GitHub 预览版，并更新 Ruoye 官网；Mac App 隔离扩展通道与缓存后的独立运行验证，以及 Chrome 扩展重定向重复点击验证均通过，原设置与扩展连接已恢复，临时页面已清理。同一商店项目已上传 1.3.2，新增权限理由、本机地址记录披露、下载地址和测试说明均已保存。1.3.2 已提交审核，自动发布已关闭，回执显示“待审核”。
+
+当前状态（2026-10-21 核验）：[Chrome Web Store 商店版 1.3.2](https://chromewebstore.google.com/detail/chrome-tab-router/iineonbhdnmadlkkmdcofakekmjpnkmn)已公开，可直接安装；上段保留 2026-10-13 提审时的历史回执。
 
 ## 恢复与卸载
 
