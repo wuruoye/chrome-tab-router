@@ -38,11 +38,11 @@
 
 ## 下载与安装
 
-[1.3.2 预览版](https://github.com/wuruoye/chrome-tab-router/releases/tag/v1.3.2)包含 App 独立重定向记录与配套扩展的当前页面重定向记录。
+[1.3.3 预览版](https://github.com/wuruoye/chrome-tab-router/releases/tag/v1.3.3)将网址匹配和复用后的操作分开，并修复仅锚点变化时更新链接后没有重新加载的问题。更新 Mac 应用即可使用本次修复，现有商店扩展 1.3.2 可以继续使用；配套开发测试 ZIP 为 1.3.3。
 
-- [Mac 应用 · Apple 芯片](https://github.com/wuruoye/chrome-tab-router/releases/download/v1.3.2/chrome-tab-router-mac-1.3.2-arm64.zip)
+- [Mac 应用 · Apple 芯片](https://github.com/wuruoye/chrome-tab-router/releases/download/v1.3.3/chrome-tab-router-mac-1.3.3-arm64.zip)
 - [Chrome 扩展 · 商店版（推荐）](https://chromewebstore.google.com/detail/chrome-tab-router/iineonbhdnmadlkkmdcofakekmjpnkmn)
-- [Chrome 扩展 ZIP · 仅供开发和测试侧载](https://github.com/wuruoye/chrome-tab-router/releases/download/v1.3.2/chrome-tab-router-extension-1.3.2.zip)
+- [Chrome 扩展 ZIP · 仅供开发和测试侧载](https://github.com/wuruoye/chrome-tab-router/releases/download/v1.3.3/chrome-tab-router-extension-1.3.3.zip)
 - [官方网站与安装验证](https://ruoye.site/chrome-tab-router/)
 - [隐私政策](https://ruoye.site/chrome-tab-router/privacy.html)
 - [GitHub Pages 镜像](https://wuruoye.github.io/chrome-tab-router/)

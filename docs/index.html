@@ -36,11 +36,11 @@
   <main id="main">
     <section class="container hero" aria-labelledby="hero-title">
       <div class="hero-copy">
-        <p class="eyebrow">Mac 菜单栏工具 · 1.3.2 预览版</p>
+        <p class="eyebrow">Mac 菜单栏工具 · 1.3.3 预览版</p>
         <h1 id="hero-title">打开重复链接，<br>回到已有页面。</h1>
         <p class="hero-description">从其他应用打开链接，先找到已有的 Chrome 页面，按设置刷新或更新网址。Mac 应用能独立记住跳转前后的地址，再次打开仍复用原标签页。</p>
         <div class="hero-actions">
-          <a class="button" href="https://github.com/wuruoye/chrome-tab-router/releases/download/v1.3.2/chrome-tab-router-mac-1.3.2-arm64.zip">
+          <a class="button" href="https://github.com/wuruoye/chrome-tab-router/releases/download/v1.3.3/chrome-tab-router-mac-1.3.3-arm64.zip">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M5 16v4h14v-4" stroke-linecap="round" stroke-linejoin="round"/></svg>
             下载 Mac 应用
           </a>
@@ -94,8 +94,8 @@
             </a>
             <div class="feature-copy">
               <h3>设置都在菜单栏里</h3>
-              <p>刷新、网址匹配、例外网站、登录启动和默认浏览器，随时可以调整。设置自动保存。</p>
-              <p class="caption-note">Mac 菜单实际界面，展示图片已提亮。点击图片可查看大图。</p>
+              <p>“网址匹配”决定哪些链接可以复用同一标签页；“复用后的操作”单独控制完整链接更新与刷新。设置自动保存。</p>
+              <p class="caption-note">1.3.0 菜单实际界面，展示图片已提亮。1.3.3 已将复用后的操作放入独立子菜单。点击图片可查看大图。</p>
             </div>
           </article>
           <article class="feature-panel">
@@ -124,7 +124,7 @@
         <div class="parameter-example">
           <div>
             <h3>同一个路径，不同参数，也能复用</h3>
-            <p>开启“忽略所有查询参数”和“复用时更新为新链接”，收到新参数时可更新原标签页。页面锚点和常见跟踪参数也能分别设置。</p>
+            <p>在“网址匹配”中开启“忽略所有查询参数”，在“复用后的操作”中开启“更新为完整新链接并加载”，收到新参数时就会更新原标签页。匹配时忽略的参数和锚点仍完整保留；仅锚点变化也会重新加载。</p>
           </div>
           <div>
             <div class="example-code" aria-label="同路径网址更新示意">
@@ -146,14 +146,14 @@
           <p>先安装 Mac 应用并设为默认浏览器，即可处理外部链接。需要接管 Chrome 网页内部点击时，再安装配套扩展。</p>
           <a class="button secondary" href="https://chromewebstore.google.com/detail/chrome-tab-router/iineonbhdnmadlkkmdcofakekmjpnkmn">从 Chrome Web Store 安装扩展</a>
           <div class="store-note">
-            <p>Chrome Web Store 1.3.2 已公开，可直接安装。扩展 ZIP 侧载仅供开发和测试。</p>
+            <p>现有 Chrome Web Store 1.3.2 可配合新版 Mac 应用使用，本次修复只需更新 Mac 应用。扩展 1.3.3 ZIP 侧载仅供开发和测试。</p>
             <a href="https://chromewebstore.google.com/detail/chrome-tab-router/iineonbhdnmadlkkmdcofakekmjpnkmn">安装商店版扩展 ↗</a>
           </div>
         </div>
         <ol class="steps">
           <li>
             <h3>下载并打开 Mac 应用</h3>
-            <p><a href="https://github.com/wuruoye/chrome-tab-router/releases/download/v1.3.2/chrome-tab-router-mac-1.3.2-arm64.zip">下载 1.3.2 预览版</a>，解压后将 <code>Chrome Tab Router.app</code> 放入 <code>~/Applications</code>，然后首次打开。</p>
+            <p><a href="https://github.com/wuruoye/chrome-tab-router/releases/download/v1.3.3/chrome-tab-router-mac-1.3.3-arm64.zip">下载 1.3.3 预览版</a>，解压后将 <code>Chrome Tab Router.app</code> 放入 <code>~/Applications</code>，然后首次打开。更新时先退出旧版，再替换应用并重新打开；原有设置会保留。</p>
             <p class="fine">安装包使用临时签名，尚未经过 Apple 公证。如果 macOS 阻止打开，可按 <a href="https://support.apple.com/guide/mac-help/open-a-mac-app-from-an-unknown-developer-mh40616/mac">Apple 的说明</a>，在“系统设置 → 隐私与安全性”中确认打开。</p>
           </li>
           <li>
@@ -164,7 +164,7 @@
           <li>
             <h3>可选：从 Chrome Web Store 安装扩展</h3>
             <p>在 Chrome 中打开 <a href="https://chromewebstore.google.com/detail/chrome-tab-router/iineonbhdnmadlkkmdcofakekmjpnkmn">Chrome Web Store 商店页面</a>，点击“添加至 Chrome”并按提示安装。安装前已打开的网页需要刷新一次。</p>
-            <p class="fine">仅供开发和测试：下载并解压 <a href="https://github.com/wuruoye/chrome-tab-router/releases/download/v1.3.2/chrome-tab-router-extension-1.3.2.zip">扩展 ZIP</a>，在 <code>chrome://extensions/</code> 开启“开发者模式”，选择“加载已解压的扩展程序”并选中包含 <code>manifest.json</code> 的文件夹。也可使用 Mac 菜单“Chrome 扩展 → 打开扩展目录…”中的文件。</p>
+            <p class="fine">仅供开发和测试：下载并解压 <a href="https://github.com/wuruoye/chrome-tab-router/releases/download/v1.3.3/chrome-tab-router-extension-1.3.3.zip">扩展 1.3.3 ZIP</a>，在 <code>chrome://extensions/</code> 开启“开发者模式”，选择“加载已解压的扩展程序”并选中包含 <code>manifest.json</code> 的文件夹。也可使用 Mac 菜单“Chrome 扩展 → 打开扩展目录…”中的文件。</p>
           </li>
           <li>
             <h3>确认连接，再调整菜单设置</h3>
@@ -185,7 +185,7 @@
           </div>
           <p>示例页面只显示自己的网址、参数与锚点。你可以直接观察 Chrome 中的结果。</p>
         </div>
-        <p class="verify-setup">先开启标签页复用、网页链接接管、切换后刷新、复用时更新为新链接和所有窗口查找。在“网址匹配”中开启忽略所有查询参数与页面锚点，例外网站保持为空。下面三个链接都请求打开新标签页。</p>
+        <p class="verify-setup">先开启标签页复用、网页链接接管和所有窗口查找。在“网址匹配”中开启忽略所有查询参数与页面锚点，在“复用后的操作”中开启“更新为完整新链接并加载”，例外网站保持为空。“链接不变时也刷新”可按需要选择。下面三个链接都请求打开新标签页。</p>
         <div class="verify-grid">
           <article class="verify-card">
             <p class="step-number">01 · 基准页面</p>
@@ -230,7 +230,7 @@
             </details>
             <details>
               <summary>参数不同，会不会打开错误的页面？</summary>
-              <p>默认按完整网址匹配。只有你开启相应选项后，才会忽略锚点、常见跟踪参数或全部查询参数；域名和路径仍参与比较。对参数决定内容、需要同时保留多个页面的网站，可以保留完整匹配或加入例外。是否用收到的新网址更新原页，也有单独的开关。</p>
+              <p>默认按完整网址匹配。只有你开启相应选项后，才会忽略锚点、常见跟踪参数或全部查询参数；域名和路径仍参与比较。对参数决定内容、需要同时保留多个页面的网站，可以保留完整匹配或加入例外。“复用后的操作”独立控制后续行为：开启完整新链接更新时，参数和锚点仍会完整载入；链接不变时是否刷新由另一个开关决定。</p>
             </details>
             <details>
               <summary>哪些网页点击可以接管？</summary>
@@ -246,7 +246,7 @@
             </details>
             <details>
               <summary>支持哪些 Mac？</summary>
-              <p>当前提供 Apple 芯片 Mac 的安装包，需要 macOS 13 或更新版本和 Google Chrome。1.3.0 为预览版，使用临时签名，尚未经过 Apple 公证。Intel Mac、Windows 与其他浏览器暂无发布安装包。</p>
+              <p>当前提供 Apple 芯片 Mac 的安装包，需要 macOS 13 或更新版本和 Google Chrome。1.3.3 为预览版，使用临时签名，尚未经过 Apple 公证。Intel Mac、Windows 与其他浏览器暂无发布安装包。</p>
             </details>
             <details>
               <summary>如何暂停或恢复原来的默认浏览器？</summary>
@@ -268,9 +268,9 @@
       <div class="container download-inner">
         <div>
           <h2 id="download-title">下一次打开链接，回到已有页面。</h2>
-          <p>Chrome Tab Router 1.3.0 预览版 · Apple 芯片 · macOS 13+</p>
+          <p>Chrome Tab Router 1.3.3 预览版 · Apple 芯片 · macOS 13+</p>
         </div>
-        <a class="button" href="https://github.com/wuruoye/chrome-tab-router/releases/download/v1.3.2/chrome-tab-router-mac-1.3.2-arm64.zip">下载 Mac 应用</a>
+        <a class="button" href="https://github.com/wuruoye/chrome-tab-router/releases/download/v1.3.3/chrome-tab-router-mac-1.3.3-arm64.zip">下载 Mac 应用</a>
       </div>
     </section>
   </main>
