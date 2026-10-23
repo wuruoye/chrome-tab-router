@@ -1,6 +1,13 @@
 # Chrome Web Store 发布清单
 
-核对日期：2026-10-13。当前版本：Mac 应用与扩展 1.3.2。同一商店项目已上传 1.3.2 并提交审核，回执显示“待审核”；审核后自动发布已关闭。审核通过后的公开发布须另获用户授权。
+核对日期：2026-10-23。当前 GitHub 预览版：Mac 应用与开发测试扩展 1.3.3。现有商店扩展 1.3.2 与新版 App 兼容，本次修复更新 Mac 应用即可使用。
+
+## 1.3.3 发布与验证
+
+- [x] “网址匹配”和“复用后的操作”分开设置；完整新链接保留参数及锚点，仅锚点变化时也重新加载。应用编译、928 项匹配与复用组合检查及真实 Chrome 参数更新、锚点更新、独立刷新验证通过，测试设置已恢复。
+- [x] Mac 应用版本为 1.3.3，构建号为 8；配套扩展 ZIP 版本为 1.3.3。两个 ZIP 的解压完整性、版本和文件内容检查通过，Mac 应用签名检查通过。
+- [x] [GitHub Release v1.3.3](https://github.com/wuruoye/chrome-tab-router/releases/tag/v1.3.3)已公开发布为预览版，标签对应提交 `caed6f0d7c687ea2cb5824d15e38315dd9d198db`。[Mac 安装包](https://github.com/wuruoye/chrome-tab-router/releases/download/v1.3.3/chrome-tab-router-mac-1.3.3-arm64.zip)和[扩展 ZIP](https://github.com/wuruoye/chrome-tab-router/releases/download/v1.3.3/chrome-tab-router-extension-1.3.3.zip)公开下载均返回 HTTP 200，下载文件与本地包逐字节一致。
+- [x] [Ruoye 官网](https://ruoye.site/chrome-tab-router/)已切换到该提交对应的静态页面目录。三个 Mac 下载入口和开发测试扩展链接均指向 1.3.3；在线 HTML 与提交内容一致。浏览器已核对版本、下载入口和安装说明，截图保存在本地 `build/website-1.3.3.png`。
 
 ## 1.3.2 验证
 
