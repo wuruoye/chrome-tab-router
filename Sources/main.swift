@@ -157,7 +157,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
             do {
                 let result = try route(url)
                 switch result {
-                case "reused-updated": lastResult = "已复用原标签页并载入新链接。"
+                case "reused-updated": lastResult = "已复用原标签页并加载完整新链接。"
                 case "reused-refreshed": lastResult = "已切换到已有标签页并刷新。"
                 case "reused": lastResult = "已切换到已有标签页。"
                 default: lastResult = "已在 Chrome 新开标签页。"
@@ -218,15 +218,22 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         resultMenuItem = addLabel(lastResult, to: menu)
         menu.addItem(.separator())
         addSetting("enabled", title: "启用标签页复用", to: menu)
-        addSetting("refreshReusedTabs", title: "切换到已有标签页后刷新", to: menu)
-        addSetting("useIncomingURL", title: "复用时更新为新链接", to: menu)
         addSetting("searchAllWindows", title: "在所有 Chrome 窗口中查找", to: menu)
         addSetting("interceptBrowserLinks", title: "接管 Chrome 网页的新标签页链接", to: menu)
 
         let matching = addSubmenu("网址匹配", to: menu)
+        addLabel("决定哪些链接可以复用同一标签页", to: matching)
+        matching.addItem(.separator())
         addSetting("ignoreFragments", title: "忽略页面锚点（# 后的内容）", to: matching)
         addSetting("ignoreQueryParameters", title: "忽略所有查询参数（? 后的内容）", to: matching)
         addSetting("ignoreTrackingParameters", title: "忽略常见跟踪参数（utm_、gclid 等）", to: matching)
+        let reuse = addSubmenu("复用后的操作", to: menu)
+        addLabel("找到匹配的标签页后", to: reuse)
+        reuse.addItem(.separator())
+        addSetting("useIncomingURL", title: "更新为完整新链接并加载", to: reuse)
+        addSetting("refreshReusedTabs", title: "链接不变时也刷新", to: reuse)
+        settingMenuItems["useIncomingURL"]?.toolTip = "使用收到的完整网址，包括匹配时忽略的参数和 # 后内容。仅 # 后内容变化时也重新加载；关闭后保留原网址。"
+        settingMenuItems["refreshReusedTabs"]?.toolTip = "完整网址相同，或关闭更新新链接时，重新加载标签页当前网址。"
         exclusionsMenu = addSubmenu("例外网站", to: menu)
         loginMenuItem = addItem("登录时自动启动", action: #selector(changeLoginSetting(_:)), to: menu)
         menu.addItem(.separator())

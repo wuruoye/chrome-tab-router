@@ -35,21 +35,20 @@ final class RoutingEngine {
                 }
                 if !settings.excludes(candidate) && (settings.normalized(candidate) == key || redirectMatch) {
                     let inFlight = appNavigation.isOpening(tab, requestedURL: url)
-                    let updateURL = !inFlight && settings["useIncomingURL"] && candidate.absoluteString != url.absoluteString
-                    var oldPage = URLComponents(url: candidate, resolvingAgainstBaseURL: false)
-                    var newPage = URLComponents(url: url, resolvingAgainstBaseURL: false)
-                    oldPage?.fragment = nil
-                    newPage?.fragment = nil
-                    // A changed query loads the document through navigation. A fragment change needs an explicit reload.
-                    let navigationLoadsPage = updateURL && oldPage?.string != newPage?.string
-                    let reload = !inFlight && settings["refreshReusedTabs"] && !navigationLoadsPage
+                    let (updateURL, reload) = settings.reuseAction(currentURL: candidate, incomingURL: url,
+                                                                 isOpening: inFlight)
                     let focused = try invoke("focustab", [NSAppleEventDescriptor(int32: Int32(tab.windowID)),
                         NSAppleEventDescriptor(string: String(tab.tabID)), NSAppleEventDescriptor(string: url.absoluteString),
                         NSAppleEventDescriptor(boolean: updateURL), NSAppleEventDescriptor(boolean: reload)])
                     if (updateURL || reload), let state = tabState(from: focused) {
                         let retained = reload ? navigationEntries.filter {
                             $0.tabID == tab.tabID && $0.url == candidate.absoluteString
-                        }.flatMap(\.aliases) : []
+                        }.flatMap(\.aliases).compactMap { address -> String? in
+                            guard updateURL else { return address }
+                            var alias = URLComponents(string: address)
+                            alias?.percentEncodedFragment = URLComponents(url: url, resolvingAgainstBaseURL: false)?.percentEncodedFragment
+                            return alias?.string
+                        } : []
                         appNavigation.track(state, requestedURL: updateURL ? url : candidate, retaining: retained)
                     }
                     if updateURL { return "reused-updated" }

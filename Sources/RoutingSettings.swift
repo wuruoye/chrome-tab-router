@@ -48,6 +48,19 @@ struct RoutingSettings {
         return excludedDomains.contains { host == $0 || host.hasSuffix("." + $0) }
     }
 
+    // Matching only chooses a tab. Reuse always acts on the full incoming URL.
+    func reuseAction(currentURL: URL, incomingURL: URL, isOpening: Bool) -> (updateURL: Bool, reload: Bool) {
+        guard !isOpening else { return (false, false) }
+        let updateURL = self["useIncomingURL"] && currentURL.absoluteString != incomingURL.absoluteString
+        var currentPage = URLComponents(url: currentURL, resolvingAgainstBaseURL: false)
+        var incomingPage = URLComponents(url: incomingURL, resolvingAgainstBaseURL: false)
+        currentPage?.fragment = nil
+        incomingPage?.fragment = nil
+        // A document navigation loads by itself; a fragment-only update must also load the new address.
+        let reload = updateURL ? currentPage?.string == incomingPage?.string : self["refreshReusedTabs"]
+        return (updateURL, reload)
+    }
+
     func normalized(_ url: URL) -> String {
         guard var components = URLComponents(url: url, resolvingAgainstBaseURL: false) else { return url.absoluteString }
         components.scheme = components.scheme?.lowercased()

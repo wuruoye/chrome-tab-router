@@ -28,8 +28,9 @@ async function update() {
     stateLabel.textContent = settings.enabled && settings.interceptBrowserLinks
       ? "已连接 · 网页链接接管已开启" : "已连接 · 网页链接接管已暂停";
     detailsLabel.textContent =
-      "设置与 Mac 菜单栏自动共用。" + (settings.refreshReusedTabs ? "复用标签页时会刷新。" : "相同 URL 复用时保留页面状态。") +
-      (settings.useIncomingURL ? "匹配后会使用新链接更新网址。" : "匹配后保留原网址。");
+      "匹配规则与复用后的操作在 Mac 菜单栏分别设置。" +
+      (settings.useIncomingURL ? "匹配后使用完整新链接并加载。" : "匹配后保留原网址。") +
+      (settings.refreshReusedTabs ? "网址保持不变时也刷新。" : "网址保持不变时保留页面状态。");
   } catch (error) {
     if (installSteps) installSteps.hidden = false;
     stateLabel.textContent = error.connectionState === "app-missing" ? "还未找到 Mac 应用"
